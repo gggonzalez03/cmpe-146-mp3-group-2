@@ -1,0 +1,4 @@
+taskcontrol suspend producer
+taskcontrol resume producer
+taskcontrol suspend consumer
+taskcontrol resume consumer
