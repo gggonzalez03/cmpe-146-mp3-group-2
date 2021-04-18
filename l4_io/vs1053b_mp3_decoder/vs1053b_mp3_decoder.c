@@ -3,7 +3,7 @@
 
 bool vs1053b__mp3_decoder_initialize(void) {
   vs1053b__configure_spi();
-  // vs1053b__reset();
+  vs1053b__reset();
   return true;
 }
 
@@ -64,4 +64,44 @@ void vs1053b__reset(void) {
   vs1053b__delay_ms(100);
 
   vs1053b__sci_write(0x03, 0x6000);
+}
+
+void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms) {
+  uint8_t mode_register = 0x00;
+  uint16_t allow_test_mode = 0x0020;
+
+  uint16_t current_mode = vs1053b__sci_read(mode_register);
+
+  vs1053b__reset();
+
+  vs1053b__sci_write(mode_register, current_mode | allow_test_mode);
+
+  while (!vs1053b__get_dreq())
+    ;
+
+  // 8-byte sequence to initialize sine test
+  vs1053b__dcs();
+  vs1053b__transmit_byte(0x53);
+  vs1053b__transmit_byte(0xEF);
+  vs1053b__transmit_byte(0x6E);
+  vs1053b__transmit_byte(n);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__dds();
+
+  vs1053b__delay_ms(duration_in_ms);
+
+  // 8-byte sequence to exit sine test
+  vs1053b__dcs();
+  vs1053b__transmit_byte(0x45);
+  vs1053b__transmit_byte(0x78);
+  vs1053b__transmit_byte(0x69);
+  vs1053b__transmit_byte(0x74);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__transmit_byte(0x00);
+  vs1053b__dds();
 }

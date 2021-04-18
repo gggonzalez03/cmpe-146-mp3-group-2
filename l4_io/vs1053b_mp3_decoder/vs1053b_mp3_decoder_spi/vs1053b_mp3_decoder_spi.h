@@ -35,6 +35,11 @@ void vs1053b__dcs();
 void vs1053b__dds(); // data chip deselect
 
 /**
+ * Get the DREQ status
+ **/
+bool vs1053b__get_dreq();
+
+/**
  * Transmit a byte on the SPI bus
  **/
 void vs1053b__transmit_byte(uint8_t byte);

@@ -38,8 +38,12 @@ static void mp3_decoder_test_task(void *p) {
   while (1) {
     status = vs1053b__get_status();
     dreq = vs1053b__mp3_decoder_needs_data();
+    
+    uint8_t middle_c = 0b11100111;
+
+    vs1053b__sine_test(middle_c, 1000);
     printf("%d, %d\n", status, dreq);
-    vTaskDelay(1000);
+    vTaskDelay(3000);
   }
 }
 
@@ -50,8 +54,8 @@ int main(void) {
   q_songname = xQueueCreate(1, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
 
-  xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
-  xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+  // xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+  // xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
   xTaskCreate(mp3_decoder_test_task, "mp3_decoder_test_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
 
   sj2_cli__init();
