@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef struct {
+  char header[10];
+  char tag[50];
+} vs1053b__mp3_song;
+
 bool vs1053b__mp3_decoder_initialize(void);
 
 bool vs1053b__mp3_decoder_needs_data(void);

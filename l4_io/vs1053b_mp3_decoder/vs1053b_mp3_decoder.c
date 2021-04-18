@@ -9,7 +9,10 @@ bool vs1053b__mp3_decoder_initialize(void) {
 
 bool vs1053b__mp3_decoder_needs_data(void) { return vs1053b__get_dreq(); }
 
-bool vs1053b__mp3_decoder_play_byte(uint8_t byte) { return true; }
+bool vs1053b__mp3_decoder_play_byte(uint8_t byte) {
+  vs1053b__transmit_byte(byte);
+  return true;
+}
 
 uint16_t vs1053b__get_status(void) {
 
