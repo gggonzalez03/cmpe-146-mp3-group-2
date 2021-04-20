@@ -106,11 +106,17 @@ static void mp3_reader_task(void *p) {
   UINT bytes_read;
 
   FIL file;
+  FRESULT result;
 
   while (1) {
 
     if (xQueueReceive(q_songname, (void *)&filename, portMAX_DELAY)) {
-      (void)f_open(&file, &filename, (FA_READ));
+      result = f_open(&file, &filename, (FA_READ));
+
+      if (result != FR_OK) {
+        fprintf(stderr, "File does not exist.\n");
+        continue;
+      }
     }
 
     while (!f_eof(&file)) {

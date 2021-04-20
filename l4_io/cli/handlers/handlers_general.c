@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "cli_handlers.h"
 
 #include "FreeRTOS.h"
@@ -135,7 +137,7 @@ app_cli_status_e cli__mp3_play(app_cli__argument_t argument, sl_string_t user_in
   // We tell the Queue to copy 32 bytes of songname from this location
   xQueueSend(q_songname, user_input_minus_command_name, portMAX_DELAY);
 
-  cli_output(NULL, "Sent filename over to the q_songname\n");
-  // printf("Sent %s over to the q_songname\n", user_input_minus_command_name);
+  printf("Sent %s over to the q_songname\n", user_input_minus_command_name);
+
   return APP_CLI_STATUS__SUCCESS;
 }
