@@ -12,7 +12,11 @@ bool vs1053b__mp3_decoder_initialize(void);
 
 bool vs1053b__mp3_decoder_needs_data(void);
 
+void vs1053b__mp3_decoder_start();
+
 bool vs1053b__mp3_decoder_play_byte(uint8_t byte);
+
+void vs1053b__mp3_decoder_end();
 
 uint16_t vs1053b__get_status(void);
 
