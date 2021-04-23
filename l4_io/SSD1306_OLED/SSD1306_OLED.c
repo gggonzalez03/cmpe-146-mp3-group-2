@@ -19,7 +19,14 @@ void SSD1306__write(uint8_t command, uint8_t data) {
   if (data != NULL) {
     SSD1306__transmit_byte(data);
   }
+  SSD1306__ds();
+}
+
+void SSD1306__data_write(uint8_t data) {
+  SSD1306__cs();
   SSD1306__data_cs();
+  SSD1306__transmit_byte(data);
+  SSD1306__data_ds();
   SSD1306__ds();
 }
 
