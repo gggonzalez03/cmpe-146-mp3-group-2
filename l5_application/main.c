@@ -9,8 +9,8 @@
 #include "lpc40xx.h"
 #include "sj2_cli.h"
 
+#include "SSD1306_OLED.h"
 #include "ff.h"
-#include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
  *                     Declarations
@@ -30,13 +30,15 @@ static QueueHandle_t q_songdata;
  **********************************************************/
 static void mp3_reader_task(void *p);
 static void mp3_player_task(void *p);
+static void mp3_display_task(void *p);
 
 int main(void) {
   q_songname = xQueueCreate(1, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
 
-  xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
-  xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+  xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_LOW, NULL);
+  xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_LOW, NULL);
+  xTaskCreate(mp3_display_task, "mp3_display_task", 4096 / sizeof(void *), NULL, PRIORITY_LOW, NULL);
 
   sj2_cli__init();
   vTaskStartScheduler();
@@ -92,6 +94,32 @@ static void mp3_player_task(void *p) {
     vs1053b__mp3_decoder_end();
   }
 }
+
+static void mp3_display_task(void *p) {
+  SSD1306_OLED_initialize();
+  delay__ms(100);
+  SSD1306__write(0xAE, NULL);
+  SSD1306__write(0xD5, 0x80);
+  SSD1306__write(0xA8, 0x3F);
+  SSD1306__write(0xD3, 0x00);
+  SSD1306__write(0x40, NULL);
+  SSD1306__write(0x8D, 0x14);
+  SSD1306__write(0xA1, NULL);
+  SSD1306__write(0xC8, NULL);
+  SSD1306__write(0xDA, 0x12);
+  SSD1306__write(0x81, 0xCF);
+  SSD1306__write(0xD9, 0xF1);
+  SSD1306__write(0xDB, 0x40);
+  SSD1306__write(0xA4, NULL);
+  SSD1306__write(0xA6, NULL);
+  SSD1306__write(0xAF, NULL);
+  SSD1306__write(0xA5, NULL);
+
+  while (1) {
+    ;
+  }
+}
+
 /**********************************************************
  *              Helper Functions Definitions
  **********************************************************/

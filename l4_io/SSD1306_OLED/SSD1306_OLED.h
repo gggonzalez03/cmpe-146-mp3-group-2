@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+bool SSD1306_OLED_initialize(void);
+
+void SSD1306__write(uint8_t command, uint8_t data);
+
+#if 0
 typedef struct {
   char header[10];
   char tag[50];
@@ -63,3 +68,5 @@ void vs1053b__reset(void);
  * Do a sine test on the vs1053b chip
  **/
 void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms);
+
+#endif
