@@ -6,6 +6,7 @@
 bool SSD1306_OLED_initialize(void);
 
 void SSD1306__write(uint8_t command, uint8_t data);
+SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size);
 void SSD1306__data_write(uint8_t data);
 #if 0
 typedef struct {

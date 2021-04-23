@@ -22,6 +22,19 @@ void SSD1306__write(uint8_t command, uint8_t data) {
   SSD1306__ds();
 }
 
+SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size) {
+  SSD1306__cs();
+  SSD1306__data_ds();
+
+  SSD1306__transmit_byte(command);
+
+  for (uint8_t index = 0; index < size; index++) {
+    SSD1306__transmit_byte(data[index]);
+  }
+
+  SSD1306__ds();
+}
+
 void SSD1306__data_write(uint8_t data) {
   SSD1306__cs();
   SSD1306__data_cs();
