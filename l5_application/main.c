@@ -10,6 +10,7 @@
 #include "sj2_cli.h"
 
 #include "ff.h"
+#include "mp3_metadata_decoder.h"
 #include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
@@ -24,6 +25,13 @@ static QueueHandle_t q_songdata;
 /**********************************************************
  *                    Helper Functions
  **********************************************************/
+
+void print_mp3_metadata(mp3_s *mp3) {
+  printf("File Identifier: %s\n", mp3->tag);
+  printf("ID3v2 version: %d, revision: %d\n", mp3->id3_version[0], mp3->id3_version[1]);
+  printf("ID3v2 flags: %d\n", mp3->id3_flags);
+  printf("ID3v2 size (in bytes): %ld\n", mp3->id3_size_in_bytes);
+}
 
 /**********************************************************
  * 								    Tasks Prototypes
@@ -54,6 +62,8 @@ static void mp3_reader_task(void *p) {
   FIL file;
   FRESULT result;
 
+  mp3_s mp3;
+
   while (1) {
 
     if (xQueueReceive(q_songname, (void *)&filename, portMAX_DELAY)) {
@@ -64,6 +74,11 @@ static void mp3_reader_task(void *p) {
         continue;
       }
     }
+
+    // This will also update the file pointer to point to the end
+    // of the mp3 header (start of the mp3 audio data)
+    (void)get_mp3_metadata_from_id3_header(&file, &mp3);
+    print_mp3_metadata(&mp3);
 
     while (!f_eof(&file)) {
       f_read(&file, (void *)buffer, sizeof(file_buffer_t), &bytes_read);
