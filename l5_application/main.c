@@ -11,6 +11,7 @@
 
 #include "ff.h"
 #include "mp3_metadata_decoder.h"
+#include "mp3_song_list.h"
 #include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
@@ -37,11 +38,19 @@ void print_mp3_metadata(mp3_s *mp3) {
   printf("Year: %s\n", mp3->year);
 }
 
+static void print_song_list(void) {
+  mp3_song_list__populate();
+  for (size_t song_number = 0; song_number < mp3_song_list__get_item_count(); song_number++) {
+    printf("Song %2d: %s\n", (1 + song_number), mp3_song_list__get_name_for_item(song_number));
+  }
+}
+
 /**********************************************************
  * 								    Tasks Prototypes
  **********************************************************/
 static void mp3_reader_task(void *p);
 static void mp3_player_task(void *p);
+static void mp3_oled_screen_task(void *p);
 
 int main(void) {
   q_songname = xQueueCreate(1, sizeof(songname_t));
@@ -49,6 +58,7 @@ int main(void) {
 
   xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
   xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+  xTaskCreate(mp3_oled_screen_task, "mp3_oled_screen_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
 
   sj2_cli__init();
   vTaskStartScheduler();
@@ -114,6 +124,15 @@ static void mp3_player_task(void *p) {
       vs1053b__mp3_decoder_play_byte(buffer[i]);
     }
     vs1053b__mp3_decoder_end();
+  }
+}
+
+static void mp3_oled_screen_task(void *p) {
+
+  print_song_list();
+
+  while (1) {
+    vTaskDelay(portMAX_DELAY);
   }
 }
 /**********************************************************
