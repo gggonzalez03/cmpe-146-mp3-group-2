@@ -5,16 +5,19 @@
 #include "ff.h"
 
 typedef struct {
-  char tag[3];
+  // + 1 for the null terminator
+  char filename[32 + 1];
+  char tag[3 + 1];
   uint8_t id3_version[2];
   uint8_t id3_flags;
   uint32_t id3_size_in_synchsafe_integer;
   uint32_t id3_size_in_bytes;
 
-  char song_title[32];
-  char album[32];
-  char artist[32];
-  uint32_t year;
+  // + 1 for the null terminator
+  char song_title[30 + 1];
+  char artist[30 + 1];
+  char album[30 + 1];
+  char year[4 + 1];
 } mp3_s;
 
 // typedef enum {
@@ -43,8 +46,18 @@ uint32_t decode_synchsafe_integer(uint32_t synchsafe_integer);
 /**
  * Get mp3 metadata from the id3 header. This will also call f_lseek() to change the
  * file pointer to the start of audio data.
- * @param file is the already opened mp3 file
+ * @param file is the name of the mp3 file
  * @param mp3 is the struct where the metadata will be stored
  * @return file pointer to where the header ends (start of audio data)
  **/
-uint32_t get_mp3_metadata_from_id3_header(FIL *file, mp3_s *mp3);
+uint32_t get_mp3_metadata_from_id3_header(const char *filename, mp3_s *mp3);
+
+/**
+ * Get mp3 metadata from the last 128 bytes of the file. This 128 bytes of data
+ * are prefaced with a string "TAG". This function will also try to f_seek() to the
+ * start of the audio file if an ID3 header exists.
+ * @param file is the name of the mp3 file
+ * @param mp3 is the struct where the metadata will be stored
+ * @return file pointer to where the header ends (start of audio data)
+ **/
+uint32_t get_mp3_metadata_from_id3v1_tag(const char *filename, mp3_s *mp3);

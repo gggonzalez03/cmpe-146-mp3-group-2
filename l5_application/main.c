@@ -30,7 +30,11 @@ void print_mp3_metadata(mp3_s *mp3) {
   printf("File Identifier: %s\n", mp3->tag);
   printf("ID3v2 version: %d, revision: %d\n", mp3->id3_version[0], mp3->id3_version[1]);
   printf("ID3v2 flags: %d\n", mp3->id3_flags);
-  printf("ID3v2 size (in bytes): %ld\n", mp3->id3_size_in_bytes);
+  printf("ID3v2 size (in bytes): %lu\n", mp3->id3_size_in_bytes);
+  printf("Song name: %s\n", mp3->song_title);
+  printf("Artist: %s\n", mp3->artist);
+  printf("Album: %s\n", mp3->album);
+  printf("Year: %s\n", mp3->year);
 }
 
 /**********************************************************
@@ -55,7 +59,7 @@ int main(void) {
  **********************************************************/
 static void mp3_reader_task(void *p) {
 
-  char filename;
+  char filename[32];
   file_buffer_t buffer;
   UINT bytes_read;
 
@@ -63,11 +67,12 @@ static void mp3_reader_task(void *p) {
   FRESULT result;
 
   mp3_s mp3;
+  uint32_t start_of_audio;
 
   while (1) {
 
-    if (xQueueReceive(q_songname, (void *)&filename, portMAX_DELAY)) {
-      result = f_open(&file, &filename, (FA_READ));
+    if (xQueueReceive(q_songname, (void *)filename, portMAX_DELAY)) {
+      result = f_open(&file, filename, (FA_READ));
 
       if (result != FR_OK) {
         fprintf(stderr, "File does not exist.\n");
@@ -75,9 +80,13 @@ static void mp3_reader_task(void *p) {
       }
     }
 
-    // This will also update the file pointer to point to the end
-    // of the mp3 header (start of the mp3 audio data)
-    (void)get_mp3_metadata_from_id3_header(&file, &mp3);
+    f_close(&file);
+
+    start_of_audio = get_mp3_metadata_from_id3v1_tag(filename, &mp3);
+
+    result = f_open(&file, filename, (FA_READ));
+    f_lseek(&file, start_of_audio);
+
     print_mp3_metadata(&mp3);
 
     while (!f_eof(&file)) {
