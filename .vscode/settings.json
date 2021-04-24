@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "chrono": "c",
+    "mp3_metadata_decoder.h": "c"
+  }
+}

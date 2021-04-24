@@ -10,6 +10,7 @@
 #include "sj2_cli.h"
 
 #include "ff.h"
+#include "mp3_metadata_decoder.h"
 #include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
@@ -24,6 +25,17 @@ static QueueHandle_t q_songdata;
 /**********************************************************
  *                    Helper Functions
  **********************************************************/
+
+void print_mp3_metadata(mp3_s *mp3) {
+  printf("File Identifier: %s\n", mp3->tag);
+  printf("ID3v2 version: %d, revision: %d\n", mp3->id3_version[0], mp3->id3_version[1]);
+  printf("ID3v2 flags: %d\n", mp3->id3_flags);
+  printf("ID3v2 size (in bytes): %lu\n", mp3->id3_size_in_bytes);
+  printf("Song name: %s\n", mp3->song_title);
+  printf("Artist: %s\n", mp3->artist);
+  printf("Album: %s\n", mp3->album);
+  printf("Year: %s\n", mp3->year);
+}
 
 /**********************************************************
  * 								    Tasks Prototypes
@@ -47,23 +59,35 @@ int main(void) {
  **********************************************************/
 static void mp3_reader_task(void *p) {
 
-  char filename;
+  char filename[32];
   file_buffer_t buffer;
   UINT bytes_read;
 
   FIL file;
   FRESULT result;
 
+  mp3_s mp3;
+  uint32_t start_of_audio;
+
   while (1) {
 
-    if (xQueueReceive(q_songname, (void *)&filename, portMAX_DELAY)) {
-      result = f_open(&file, &filename, (FA_READ));
+    if (xQueueReceive(q_songname, (void *)filename, portMAX_DELAY)) {
+      result = f_open(&file, filename, (FA_READ));
 
       if (result != FR_OK) {
         fprintf(stderr, "File does not exist.\n");
         continue;
       }
     }
+
+    f_close(&file);
+
+    start_of_audio = get_mp3_metadata_from_id3v1_tag(filename, &mp3);
+
+    (void)f_open(&file, filename, (FA_READ));
+    f_lseek(&file, start_of_audio);
+
+    print_mp3_metadata(&mp3);
 
     while (!f_eof(&file)) {
       f_read(&file, (void *)buffer, sizeof(file_buffer_t), &bytes_read);
