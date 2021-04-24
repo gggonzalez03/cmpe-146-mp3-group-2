@@ -182,6 +182,10 @@ uint32_t get_mp3_metadata_from_id3v1_tag(const char *filename, mp3_s *mp3) {
   f_read(&file, (void *)mp3->tag, 3, &bytes_read);
   mp3->tag[3] = '\0';
   if (strcmp(mp3->tag, "TAG")) {
+    // Set the filename as the song name instead
+    if (strlen(filename) <= 30) {
+      strcpy(mp3->song_title, filename);
+    }
     return 0;
   }
 
