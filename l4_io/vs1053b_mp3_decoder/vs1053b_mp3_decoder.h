@@ -63,3 +63,10 @@ void vs1053b__reset(void);
  * Do a sine test on the vs1053b chip
  **/
 void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms);
+
+/**
+ * Set volume
+ * @param left is the volume for the left output in percent
+ * @param right is the volume for the right output in percent
+ **/
+void vs1053b__set_volume(uint8_t left, uint8_t right);

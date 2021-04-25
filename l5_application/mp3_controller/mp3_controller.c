@@ -8,6 +8,7 @@
 #include "gpio_isr.h"
 #include "lpc_peripherals.h"
 #include "sys_time.h"
+#include "vs1053b_mp3_decoder.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -208,12 +209,14 @@ void mp3_controller__scroll(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__VOLUME_UP:
     if (volume_percentage < 100) {
-      volume_percentage++;
+      ++volume_percentage;
+      vs1053b__set_volume(volume_percentage, volume_percentage);
     }
     break;
   case MP3_CONTROLLER__VOLUME_DOWN:
     if (volume_percentage > 0) {
-      volume_percentage--;
+      --volume_percentage;
+      vs1053b__set_volume(volume_percentage, volume_percentage);
     }
     break;
 

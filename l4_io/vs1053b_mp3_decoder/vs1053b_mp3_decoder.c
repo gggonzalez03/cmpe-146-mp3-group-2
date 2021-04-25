@@ -112,3 +112,23 @@ void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms) {
   vs1053b__transmit_byte(0x00);
   vs1053b__dds();
 }
+
+void vs1053b__set_volume(uint8_t left, uint8_t right) {
+  uint8_t volume_command = 0x0B;
+
+  uint8_t minimum_volume = 0xC8; // 200d
+  uint16_t non_normalized_left = minimum_volume - ((uint16_t)left << 1);
+  uint16_t non_normalized_right = minimum_volume - ((uint16_t)right << 1);
+
+  uint16_t left_and_right = ((uint16_t)non_normalized_left << 8) | (uint16_t)non_normalized_right;
+
+  while (!vs1053b__get_dreq())
+    ;
+
+  // Deselect data chip select first before transmitting change volume command
+  // This will solve the glitch issues when changing the volume while a song
+  // is playing
+  vs1053b__dds();
+  vs1053b__sci_write(volume_command, left_and_right);
+  vs1053b__dcs(); // Reselect data chip select, continue playing song
+}
