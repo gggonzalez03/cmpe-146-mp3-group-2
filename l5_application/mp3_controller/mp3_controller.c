@@ -227,7 +227,7 @@ size_t mp3_controller__get_scroll_index(void) { return scroll_index; }
 void mp3_controller__play_song(size_t item_number) {
   const char *songname = mp3_song_list__get_name_for_item(item_number);
   xQueueReset(q_songname);
-  xQueueSendFromISR(q_songname, (void *)songname, NULL);
+  xQueueSend(q_songname, (void *)songname, 0);
 
   if (is_song_playing) {
     is_break_required = true;
@@ -237,7 +237,7 @@ void mp3_controller__play_song(size_t item_number) {
 
 void mp3_controller__enqueue_song(size_t item_number) {
   const char *songname = mp3_song_list__get_name_for_item(item_number);
-  xQueueSendFromISR(q_songname, (void *)songname, NULL);
+  xQueueSend(q_songname, (void *)songname, 0);
 }
 
 void mp3_controller__pause_song(void) { is_song_paused = true; }
@@ -262,6 +262,11 @@ void mp3_controller__go_to_player_screen(void) { is_on_player_screen = true; }
 void mp3_controller__go_to_song_list_screen(void) { is_on_player_screen = false; }
 
 void mp3_controller__reset_flags(void) {
+  // We assume that a song is stopped for another song to play
+  // either by playing a song directly from the song list or
+  // by skipping to to play an enqueued song. What this means is that
+  // there is still a song playing but a break was required to stop
+  // the previous song.
   is_song_playing = is_break_required;
   is_break_required = false;
   is_song_paused = false;
