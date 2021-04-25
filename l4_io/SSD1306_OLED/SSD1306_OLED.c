@@ -35,6 +35,22 @@ SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size) {
   SSD1306__ds();
 }
 
+void SSD1306__horizontalscroll_on() {
+  SSD1306__cs();
+  SSD1306__data_ds();
+
+  SSD1306__transmit_byte(0x26); // command to setup horizontal scroll
+  SSD1306__transmit_byte(0x00); // dummy byte
+  SSD1306__transmit_byte(0x00); // define start page address
+  SSD1306__transmit_byte(0x07); // time interval between each scrolll
+  SSD1306__transmit_byte(0x00); // define page end address
+  SSD1306__transmit_byte(0x00); // dummy byte
+  SSD1306__transmit_byte(0xFF); // dummy byte
+
+  SSD1306__transmit_byte(0x2F); // activate scrolling
+  SSD1306__ds();
+}
+
 void SSD1306__data_write(uint8_t data) {
   SSD1306__cs();
   SSD1306__data_cs();
