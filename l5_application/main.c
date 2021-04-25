@@ -114,6 +114,7 @@ static void mp3_reader_task(void *p) {
     while (!f_eof(&file)) {
 
       if (mp3_controller__is_break_required()) {
+        xQueueReset(q_songdata);
         break;
       }
 
@@ -129,8 +130,10 @@ static void mp3_reader_task(void *p) {
 
 static void mp3_player_task(void *p) {
   file_buffer_t buffer;
+  uint8_t volume_50_percent = 70;
 
   vs1053b__mp3_decoder_initialize();
+  vs1053b__set_volume(volume_50_percent, volume_50_percent);
 
   while (1) {
     xQueueReceive(q_songdata, (void *)buffer, portMAX_DELAY);
