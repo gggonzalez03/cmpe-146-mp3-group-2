@@ -35,7 +35,7 @@ static gpio_s mp3_controller_accel_interrupt_1 = {GPIO__PORT_0, 26};
 static gpio_s mp3_controller_accel_interrupt_2 = {GPIO__PORT_0, 25};
 
 static size_t scroll_index = 0;
-static uint8_t volume_percentage = 50;
+static uint8_t volume_percentage = 70;
 
 static bool is_song_playing = false;
 static bool is_song_paused = false;
@@ -243,9 +243,15 @@ void mp3_controller__enqueue_song(size_t item_number) {
   xQueueSend(q_songname, (void *)songname, 0);
 }
 
-void mp3_controller__pause_song(void) { is_song_paused = true; }
+void mp3_controller__pause_song(void) {
+  vTaskSuspend(mp3_reader_task_handle);
+  is_song_paused = true;
+}
 
-void mp3_controller__resume_song(void) { is_song_paused = false; }
+void mp3_controller__resume_song(void) {
+  vTaskResume(mp3_reader_task_handle);
+  is_song_paused = false;
+}
 
 void mp3_controller__stop_song(void) {
   is_break_required = true;
@@ -258,6 +264,7 @@ void mp3_controller__play_enqueued_song(void) {
     is_break_required = true;
   }
   is_song_playing = true;
+  mp3_controller__resume_song();
 }
 
 void mp3_controller__go_to_player_screen(void) { is_on_player_screen = true; }
@@ -324,12 +331,10 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     printf("Enqueue track #%d\n", control->argument + 1);
     break;
   case MP3_CONTROLLER__PAUSE_SONG:
-    vTaskSuspend(mp3_reader_task_handle);
     mp3_controller__pause_song();
     printf("Pause song\n");
     break;
   case MP3_CONTROLLER__RESUME_SONG:
-    vTaskResume(mp3_reader_task_handle);
     mp3_controller__resume_song();
     printf("Resume song\n");
     break;
