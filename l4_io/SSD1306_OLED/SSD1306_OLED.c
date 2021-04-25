@@ -1,44 +1,65 @@
-#include "vs1053b_mp3_decoder.h"
-#include "vs1053b_mp3_decoder_spi.h"
+#include "SSD1306_OLED.h"
+#include "SSD1306_OLED_spi.h"
+#include <stdio.h>
 
-bool vs1053b__mp3_decoder_initialize(void) {
-  vs1053b__configure_spi();
-  vs1053b__reset();
+// static bool command= FALSE ;
+
+bool SSD1306_OLED_initialize(void) {
+  SSD1306__configure_spi();
+  //  vs1053b__reset();
   return true;
 }
 
-bool vs1053b__mp3_decoder_needs_data(void) { return vs1053b__get_dreq(); }
+void SSD1306__write(uint8_t command, uint8_t data) {
 
-void vs1053b__mp3_decoder_start() { vs1053b__dcs(); }
+  SSD1306__cs();
+  SSD1306__data_ds();
+  SSD1306__transmit_byte(command);
 
-bool vs1053b__mp3_decoder_play_byte(uint8_t byte) {
-  vs1053b__transmit_byte(byte);
-  return true;
+  if (data != NULL) {
+    SSD1306__transmit_byte(data);
+  }
+  SSD1306__ds();
 }
 
-void vs1053b__mp3_decoder_end() { vs1053b__dds(); }
+SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size) {
+  SSD1306__cs();
+  SSD1306__data_ds();
 
-uint16_t vs1053b__get_status(void) {
+  SSD1306__transmit_byte(command);
 
-  uint8_t status_register_address = 0x01;
+  for (uint8_t index = 0; index < size; index++) {
+    SSD1306__transmit_byte(data[index]);
+  }
 
-  uint16_t status = 0x00;
-
-  status = vs1053b__sci_read(status_register_address);
-
-  return status;
+  SSD1306__ds();
 }
 
-void vs1053b__sci_write(uint8_t address, uint16_t data) {
-  uint8_t write_op_code = 0x02;
+void SSD1306__horizontalscroll_on() {
+  SSD1306__cs();
+  SSD1306__data_ds();
 
-  vs1053b__cs();
-  vs1053b__transmit_byte(write_op_code);
-  vs1053b__transmit_byte(address);
-  vs1053b__transmit_byte(data >> 8);
-  vs1053b__transmit_byte(data & 0xFF);
-  vs1053b__ds();
+  SSD1306__transmit_byte(0x26); // command to setup horizontal scroll
+  SSD1306__transmit_byte(0x00); // dummy byte
+  SSD1306__transmit_byte(0x00); // define start page address
+  SSD1306__transmit_byte(0x07); // time interval between each scrolll
+  SSD1306__transmit_byte(0x00); // define page end address
+  SSD1306__transmit_byte(0x00); // dummy byte
+  SSD1306__transmit_byte(0xFF); // dummy byte
+
+  SSD1306__transmit_byte(0x2F); // activate scrolling
+  SSD1306__ds();
 }
+
+void SSD1306__data_write(uint8_t data) {
+  SSD1306__cs();
+  SSD1306__data_cs();
+  SSD1306__transmit_byte(data);
+  SSD1306__data_ds();
+  SSD1306__ds();
+}
+
+#if 0
 
 uint16_t vs1053b__sci_read(uint8_t address) {
   uint8_t read_op_code = 0x03;
@@ -54,7 +75,7 @@ uint16_t vs1053b__sci_read(uint8_t address) {
 }
 
 void vs1053b__soft_reset(void) {
-  vs1053b__sci_write(0x00, 0x0804); // 0000 1000 0000 0100 native spi mode and soft reset?
+  vs1053b__sci_write(0x00, 0x0804); // 0000 1000 0000 0100 native spi mode and soft reset? 
   vs1053b__delay_ms(100);
 }
 
@@ -71,6 +92,7 @@ void vs1053b__reset(void) {
   vs1053b__delay_ms(100);
 
   vs1053b__sci_write(0x03, 0x6000); //   XTALI×3.0?
+
 }
 
 void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms) {
@@ -112,3 +134,5 @@ void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms) {
   vs1053b__transmit_byte(0x00);
   vs1053b__dds();
 }
+
+#endif
