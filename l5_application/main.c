@@ -111,6 +111,9 @@ static void mp3_reader_task(void *p) {
 
     print_mp3_metadata(&mp3);
 
+    // Inform the mp3 controller that the queued song is played automatically
+    mp3_controller__set_is_song_playing_flag();
+
     while (!f_eof(&file)) {
 
       if (mp3_controller__is_break_required()) {

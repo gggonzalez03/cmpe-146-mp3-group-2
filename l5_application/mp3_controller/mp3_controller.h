@@ -35,6 +35,7 @@ void mp3_controller__play_enqueued_song(void);
 void mp3_controller__go_to_player_screen(void);
 void mp3_controller__go_to_song_list_screen(void);
 void mp3_controller__reset_flags(void);
+void mp3_controller__set_is_song_playing_flag(void);
 
 bool mp3_controller__is_song_playing(void);
 bool mp3_controller__is_song_paused(void);

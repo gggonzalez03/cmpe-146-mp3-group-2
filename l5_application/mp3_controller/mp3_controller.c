@@ -282,6 +282,8 @@ void mp3_controller__reset_flags(void) {
   is_song_paused = false;
 }
 
+void mp3_controller__set_is_song_playing_flag(void) { is_song_playing = true; }
+
 bool mp3_controller__is_song_playing(void) { return is_song_playing; }
 
 bool mp3_controller__is_song_paused(void) { return is_song_paused; }
