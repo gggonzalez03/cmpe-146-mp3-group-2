@@ -16,7 +16,7 @@
 #include "task.h"
 
 extern QueueHandle_t q_songname;
-extern QueueHandle_t mp3_controller__controls_queue;
+extern QueueHandle_t mp3_controller__control_inputs_queue;
 
 extern TaskHandle_t mp3_reader_task_handle;
 extern TaskHandle_t mp3_player_task_handle;
@@ -26,13 +26,26 @@ extern TaskHandle_t mp3_player_task_handle;
  *                                PRIVATE DECLARATIONS
  *
  ***********************************************************************************/
-static gpio_s mp3_controller_show_songs_button = {GPIO__PORT_0, 29};
-static gpio_s mp3_controller_show_player_button = {GPIO__PORT_0, 30};
-static gpio_s mp3_controller_rotary_out_clk = {GPIO__PORT_2, 5};
-static gpio_s mp3_controller_rotary_out_dt = {GPIO__PORT_2, 2};
-static gpio_s mp3_controller_rotary_sw = {GPIO__PORT_2, 0};
-static gpio_s mp3_controller_accel_interrupt_1 = {GPIO__PORT_0, 26};
-static gpio_s mp3_controller_accel_interrupt_2 = {GPIO__PORT_0, 25};
+static const gpio_s mp3_controller_show_songs_button = {GPIO__PORT_0, 29};
+static const gpio_s mp3_controller_show_player_button = {GPIO__PORT_0, 30};
+static const gpio_s mp3_controller_rotary_out_clk = {GPIO__PORT_2, 5};
+static const gpio_s mp3_controller_rotary_out_dt = {GPIO__PORT_2, 2};
+static const gpio_s mp3_controller_rotary_sw = {GPIO__PORT_2, 0};
+static const gpio_s mp3_controller_accel_interrupt_1 = {GPIO__PORT_0, 26};
+static const gpio_s mp3_controller_accel_interrupt_2 = {GPIO__PORT_0, 25};
+
+static const mp3_controller_s show_songs = {MP3_CONTROLLER__SHOW_SONGS, 0};
+static const mp3_controller_s show_player = {MP3_CONTROLLER__SHOW_PLAYER, 0};
+static const mp3_controller_s play_enqueued_song = {MP3_CONTROLLER__PLAY_ENQUEUED_SONG, 0};
+static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
+static const mp3_controller_s scroll_down = {MP3_CONTROLLER__SCROLL_DOWN, 0};
+static const mp3_controller_s volume_up = {MP3_CONTROLLER__VOLUME_UP, 0};
+static const mp3_controller_s volume_down = {MP3_CONTROLLER__VOLUME_DOWN, 0};
+
+static const mp3_controller_s play_song = {MP3_CONTROLLER__PLAY_SONG, 0};
+static const mp3_controller_s enqueue_song = {MP3_CONTROLLER__ENQUEUE_SONG, 0};
+static const mp3_controller_s pause_song = {MP3_CONTROLLER__PAUSE_SONG, 0};
+static const mp3_controller_s resume_song = {MP3_CONTROLLER__RESUME_SONG, 0};
 
 static size_t scroll_index = 0;
 static uint8_t volume_percentage = 70;
@@ -52,19 +65,12 @@ static bool is_on_player_screen = false; // the user is either on the player scr
 static void mp3_controller__show_songs_button_callback(void) {
   static uint64_t old_timestamp = 0;
   static uint64_t new_timestamp = 0;
-  static const mp3_controller_s show_songs = {MP3_CONTROLLER__SHOW_SONGS, 0};
-  static mp3_controller_s enqueue_song = {MP3_CONTROLLER__ENQUEUE_SONG, 0};
+  static const mp3_controller__control_input_source_e input = MP3_CONTROLLER__LEFT_BUTTON;
 
   new_timestamp = sys_time__get_uptime_ms();
 
   if (new_timestamp - old_timestamp > 200) {
-    if (!is_on_player_screen) {
-      enqueue_song.argument = scroll_index;
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&enqueue_song, NULL);
-    } else {
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&show_songs, NULL);
-      is_on_player_screen = false;
-    }
+    xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
   }
   old_timestamp = new_timestamp;
 }
@@ -72,21 +78,12 @@ static void mp3_controller__show_songs_button_callback(void) {
 static void mp3_controller__show_player_button_callback(void) {
   static uint64_t old_timestamp = 0;
   static uint64_t new_timestamp = 0;
-  static const mp3_controller_s show_player = {MP3_CONTROLLER__SHOW_PLAYER, 0};
-  static const mp3_controller_s play_enqueued_song = {MP3_CONTROLLER__PLAY_ENQUEUED_SONG, 0};
-  static char songname[32];
+  static const mp3_controller__control_input_source_e input = MP3_CONTROLLER__RIGHT_BUTTON;
 
   new_timestamp = sys_time__get_uptime_ms();
 
   if (new_timestamp - old_timestamp > 200) {
-    if (is_on_player_screen) {
-      if (xQueuePeekFromISR(q_songname, &songname) == pdTRUE) {
-        xQueueSendFromISR(mp3_controller__controls_queue, (void *)&play_enqueued_song, NULL);
-      }
-    } else {
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&show_player, NULL);
-      is_on_player_screen = true;
-    }
+    xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
   }
 
   old_timestamp = new_timestamp;
@@ -95,10 +92,9 @@ static void mp3_controller__show_player_button_callback(void) {
 static void mp3_controller__rotary_out_clk_falling_callback(void) {
   static uint64_t old_timestamp = 0;
   static uint64_t new_timestamp = 0;
-  static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
-  static const mp3_controller_s scroll_down = {MP3_CONTROLLER__SCROLL_DOWN, 0};
-  static const mp3_controller_s volume_up = {MP3_CONTROLLER__VOLUME_UP, 0};
-  static const mp3_controller_s volume_down = {MP3_CONTROLLER__VOLUME_DOWN, 0};
+  static const mp3_controller__control_input_source_e input_clockwise = MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_CLOCKW;
+  static const mp3_controller__control_input_source_e input_anti_clockwise =
+      MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_ANTI_CLOCKW;
 
   new_timestamp = sys_time__get_uptime_ms();
 
@@ -108,17 +104,9 @@ static void mp3_controller__rotary_out_clk_falling_callback(void) {
    **/
   if (new_timestamp - old_timestamp > 200) {
     if (gpio__get(mp3_controller_rotary_out_dt) ^ gpio__get(mp3_controller_rotary_out_clk)) {
-      if (is_on_player_screen) {
-        xQueueSendFromISR(mp3_controller__controls_queue, (void *)&volume_down, NULL);
-      } else {
-        xQueueSendFromISR(mp3_controller__controls_queue, (void *)&scroll_up, NULL);
-      }
+      xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_clockwise, NULL);
     } else {
-      if (is_on_player_screen) {
-        xQueueSendFromISR(mp3_controller__controls_queue, (void *)&volume_up, NULL);
-      } else {
-        xQueueSendFromISR(mp3_controller__controls_queue, (void *)&scroll_down, NULL);
-      }
+      xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_anti_clockwise, NULL);
     }
   }
 
@@ -128,24 +116,12 @@ static void mp3_controller__rotary_out_clk_falling_callback(void) {
 static void mp3_controller__rotary_sw_callback(void) {
   static uint64_t old_timestamp = 0;
   static uint64_t new_timestamp = 0;
-
-  static mp3_controller_s play_song = {MP3_CONTROLLER__PLAY_SONG, 0};
-  static mp3_controller_s pause_song = {MP3_CONTROLLER__PAUSE_SONG, 0};
-  static mp3_controller_s resume_song = {MP3_CONTROLLER__RESUME_SONG, 0};
+  static const mp3_controller__control_input_source_e input = MP3_CONTROLLER__ROTARY_ENCODER_BUTTON;
 
   new_timestamp = sys_time__get_uptime_ms();
 
   if (new_timestamp - old_timestamp > 50) {
-    if (is_on_player_screen && is_song_playing && !is_song_paused) {
-      pause_song.argument = scroll_index;
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&pause_song, NULL);
-    } else if (is_on_player_screen && is_song_playing && is_song_paused) {
-      resume_song.argument = scroll_index;
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&resume_song, NULL);
-    } else {
-      play_song.argument = scroll_index;
-      xQueueSendFromISR(mp3_controller__controls_queue, (void *)&play_song, NULL);
-    }
+    xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
   }
 
   old_timestamp = new_timestamp;
@@ -293,6 +269,67 @@ bool mp3_controller__is_song_stopped(void) { return !is_song_playing; }
 bool mp3_controller__is_break_required(void) { return is_break_required; }
 
 bool mp3_controller__is_on_player_screen(void) { return is_on_player_screen; }
+
+mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__control_input_source_e control_input) {
+
+  static char songname[32];
+  mp3_controller_s control = show_player; // default is to show the player screen
+
+  switch (control_input) {
+  case MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_CLOCKW:
+    if (is_on_player_screen) {
+      control = volume_down;
+    } else {
+      control = scroll_up;
+    }
+    break;
+  case MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_ANTI_CLOCKW:
+    if (is_on_player_screen) {
+      control = volume_up;
+    } else {
+      control = scroll_down;
+    }
+    break;
+  case MP3_CONTROLLER__ROTARY_ENCODER_BUTTON:
+    if (is_on_player_screen && is_song_playing && !is_song_paused) {
+      control = pause_song;
+      control.argument = scroll_index;
+    } else if (is_on_player_screen && is_song_playing && is_song_paused) {
+      control = resume_song;
+      control.argument = scroll_index;
+    } else {
+      control = play_song;
+      control.argument = scroll_index;
+    }
+    break;
+  case MP3_CONTROLLER__LEFT_BUTTON:
+    if (!is_on_player_screen) {
+      control = enqueue_song;
+      control.argument = scroll_index;
+    } else {
+      control = show_songs;
+    }
+    break;
+  case MP3_CONTROLLER__RIGHT_BUTTON:
+    if (is_on_player_screen) {
+      if (xQueuePeekFromISR(q_songname, &songname) == pdTRUE) {
+        control = play_enqueued_song;
+      }
+    } else {
+      control = show_player;
+    }
+    break;
+  case MP3_CONTROLLER__ACCELEROMETER_INT1:
+    break;
+  case MP3_CONTROLLER__ACCELEROMETER_INT2:
+    break;
+
+  default:
+    break;
+  }
+
+  return control;
+}
 
 bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   switch (control->control) {
