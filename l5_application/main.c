@@ -252,10 +252,13 @@ static void mp3_display_task(void *p) {
 */
 
   // Scrolling command //
-  SSD1306__horizontalscroll_on();
+  // SSD1306__horizontalscroll_on();
 
-  // scrolling end //
+  // zoom in
+  //  SSD1306__zoom_in();
 
+  // fade command//
+  SSD1306__fadeout_on();
   while (1) {
     ;
   }

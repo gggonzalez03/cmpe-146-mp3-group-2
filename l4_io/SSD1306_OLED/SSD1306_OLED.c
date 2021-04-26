@@ -34,6 +34,13 @@ SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size) {
 
   SSD1306__ds();
 }
+void SSD1306__data_write(uint8_t data) {
+  SSD1306__cs();
+  SSD1306__data_cs();
+  SSD1306__transmit_byte(data);
+  SSD1306__data_ds();
+  SSD1306__ds();
+}
 
 void SSD1306__horizontalscroll_on() {
   SSD1306__cs();
@@ -51,11 +58,25 @@ void SSD1306__horizontalscroll_on() {
   SSD1306__ds();
 }
 
-void SSD1306__data_write(uint8_t data) {
+void SSD1306__fadeout_on() {
   SSD1306__cs();
-  SSD1306__data_cs();
-  SSD1306__transmit_byte(data);
   SSD1306__data_ds();
+
+  SSD1306__transmit_byte(0x23); // command for fade out
+  SSD1306__transmit_byte(0x20); // enable fadeout mode[3:0] and time interval between each fade step{5:4}
+
+  SSD1306__ds();
+}
+
+void SSD1306__zoom_in() {
+
+  SSD1306__write(0xDA, 0x10); // COM pin  configuration needed
+  SSD1306__cs();
+  SSD1306__data_ds();
+
+  SSD1306__transmit_byte(0xD6); // command for zoom in
+  SSD1306__transmit_byte(0x01); // enable zoom in
+
   SSD1306__ds();
 }
 
