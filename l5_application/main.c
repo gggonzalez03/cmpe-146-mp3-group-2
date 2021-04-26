@@ -24,7 +24,7 @@ typedef char file_buffer_t[512];
 QueueHandle_t q_songname;
 static QueueHandle_t q_songdata;
 
-QueueHandle_t mp3_controller__controls_queue;
+QueueHandle_t mp3_controller__control_inputs_queue;
 
 TaskHandle_t mp3_reader_task_handle;
 TaskHandle_t mp3_player_task_handle;
@@ -111,6 +111,9 @@ static void mp3_reader_task(void *p) {
 
     print_mp3_metadata(&mp3);
 
+    // Inform the mp3 controller that the queued song is played automatically
+    mp3_controller__set_is_song_playing_flag();
+
     while (!f_eof(&file)) {
 
       if (mp3_controller__is_break_required()) {
@@ -159,13 +162,15 @@ static void mp3_oled_screen_task(void *p) {
 
 static void mp3_controller_task(void *p) {
 
-  mp3_controller__controls_queue = xQueueCreate(10, sizeof(mp3_controller_s));
+  mp3_controller__control_inputs_queue = xQueueCreate(10, sizeof(mp3_controller__control_input_source_e));
+  mp3_controller__control_input_source_e mp3_control_input;
   mp3_controller_s mp3_control;
 
   mp3_controller__initialize();
 
   while (1) {
-    xQueueReceive(mp3_controller__controls_queue, (void *)&mp3_control, portMAX_DELAY);
+    xQueueReceive(mp3_controller__control_inputs_queue, (void *)&mp3_control_input, portMAX_DELAY);
+    mp3_control = mp3_controller__decode_control_from_input(mp3_control_input);
     mp3_controller__execute_control(&mp3_control);
   }
 }

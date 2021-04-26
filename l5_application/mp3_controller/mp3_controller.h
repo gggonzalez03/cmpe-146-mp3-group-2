@@ -4,6 +4,16 @@
 #include <stddef.h>
 
 typedef enum {
+  MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_CLOCKW = 0,
+  MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_ANTI_CLOCKW,
+  MP3_CONTROLLER__ROTARY_ENCODER_BUTTON,
+  MP3_CONTROLLER__LEFT_BUTTON,
+  MP3_CONTROLLER__RIGHT_BUTTON,
+  MP3_CONTROLLER__ACCELEROMETER_INT1,
+  MP3_CONTROLLER__ACCELEROMETER_INT2,
+} mp3_controller__control_input_source_e;
+
+typedef enum {
   MP3_CONTROLLER__SHOW_SONGS = 0,
   MP3_CONTROLLER__SHOW_PLAYER,
   MP3_CONTROLLER__SCROLL_UP,
@@ -35,6 +45,7 @@ void mp3_controller__play_enqueued_song(void);
 void mp3_controller__go_to_player_screen(void);
 void mp3_controller__go_to_song_list_screen(void);
 void mp3_controller__reset_flags(void);
+void mp3_controller__set_is_song_playing_flag(void);
 
 bool mp3_controller__is_song_playing(void);
 bool mp3_controller__is_song_paused(void);
@@ -42,4 +53,5 @@ bool mp3_controller__is_song_stopped(void);
 bool mp3_controller__is_break_required(void);
 bool mp3_controller__is_on_player_screen(void);
 
+mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__control_input_source_e control_input);
 bool mp3_controller__execute_control(const mp3_controller_s *const control);
