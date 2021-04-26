@@ -205,8 +205,8 @@ size_t mp3_controller__get_scroll_index(void) { return scroll_index; }
 
 void mp3_controller__play_song(size_t item_number) {
   const char *songname = mp3_song_list__get_name_for_item(item_number);
-  xQueueReset(q_songname);
-  xQueueSend(q_songname, (void *)songname, 0);
+
+  xQueueSendToFront(q_songname, (void *)songname, 0);
 
   if (is_song_playing) {
     is_break_required = true;
