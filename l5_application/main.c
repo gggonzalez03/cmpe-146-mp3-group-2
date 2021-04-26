@@ -10,6 +10,8 @@
 #include "sj2_cli.h"
 
 #include "SSD1306_OLED.h"
+#include "SSD1306_OLED_ascii.h"
+
 #include "ff.h"
 #include "mp3_controller.h"
 #include "mp3_metadata_decoder.h"
@@ -204,131 +206,94 @@ static void mp3_display_task(void *p) {
   for (int i = 0; i < 1024; i++) {
     SSD1306__data_write(0x00);
   }
-  // H
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x08);
-  SSD1306__data_write(0x08);
-  SSD1306__data_write(0x08);
-  SSD1306__data_write(0x08);
-  SSD1306__data_write(0xFF);
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_A();
+  SSD1306_ascii_display_space();
 
-  //  E
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x89);
-  SSD1306__data_write(0x89);
-  SSD1306__data_write(0x89);
-  SSD1306__data_write(0x89);
-  // SSD1306__data_write(0x08);
-  // SSD1306__data_write(0xFF);
+  SSD1306_ascii_display_B();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_C();
+  SSD1306_ascii_display_space();
 
-  //  L
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
+  SSD1306_ascii_display_D();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_E();
+  SSD1306_ascii_display_space();
 
-  //  L
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
-  SSD1306__data_write(0x80);
+  SSD1306_ascii_display_F();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_G();
+  SSD1306_ascii_display_space();
 
-  // O
-  SSD1306__data_write(0x7E);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x7E);
+  SSD1306_ascii_display_H();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_I();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_J();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_K();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_L();
+  SSD1306_ascii_display_space();
 
-  // G
-  SSD1306__data_write(0x7E);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x89);
-  SSD1306__data_write(0xF8);
+  SSD1306_ascii_display_M();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_N();
+  SSD1306_ascii_display_space();
 
-  // I
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
+  SSD1306_ascii_display_O();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_P();
+  SSD1306_ascii_display_space();
 
-  // N
-  SSD1306__data_write(0xFF);
-  SSD1306__data_write(0x03);
-  SSD1306__data_write(0x0C);
-  SSD1306__data_write(0x30);
-  SSD1306__data_write(0xC0);
-  SSD1306__data_write(0xFF);
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
 
-  // space
-  SSD1306__data_write(0x00);
-  SSD1306__data_write(0x00);
+  SSD1306_ascii_display_Q();
+  SSD1306_ascii_display_space();
 
-  // G
-  SSD1306__data_write(0x7E);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x81);
-  SSD1306__data_write(0x89);
-  SSD1306__data_write(0xF8);
+  SSD1306_ascii_display_R();
+  SSD1306_ascii_display_space();
 
-  // SSD1306__data_write(0xFE);
-  // SSD1306__data_write(0x01);
-  // SSD1306__data_write(0x01);
-  // SSD1306__data_write(0x01);
-  // SSD1306__data_write(0x01);
+  SSD1306_ascii_display_S();
+  SSD1306_ascii_display_space();
 
-  /*
-  for (int i = 0; i < 100; i++) {
-    SSD1306__data_write(0xFF);
-  }
-*/
+  SSD1306_ascii_display_T();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_U();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_V();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_W();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_X();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_Y();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_Z();
+  SSD1306_ascii_display_space();
 
   // Scrolling command //
-  SSD1306__horizontalscroll_on();
+  // SSD1306__horizontalscroll_on();
 
   // scrolling end //
 
