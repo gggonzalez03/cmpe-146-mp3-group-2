@@ -100,9 +100,9 @@ static void mp3_controller__rotary_out_clk_falling_callback(void) {
 
   /**
    * TODO:
-   * The debouncing problem may be solved in hardware
+   * The debouncing problem may also be solved in hardware
    **/
-  if (new_timestamp - old_timestamp > 200) {
+  if (new_timestamp - old_timestamp > 70) {
     if (gpio__get(mp3_controller_rotary_out_dt) ^ gpio__get(mp3_controller_rotary_out_clk)) {
       xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_clockwise, NULL);
     } else {
@@ -120,7 +120,7 @@ static void mp3_controller__rotary_sw_callback(void) {
 
   new_timestamp = sys_time__get_uptime_ms();
 
-  if (new_timestamp - old_timestamp > 50) {
+  if (new_timestamp - old_timestamp > 200) {
     xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
   }
 
@@ -278,16 +278,16 @@ mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__contr
   switch (control_input) {
   case MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_CLOCKW:
     if (is_on_player_screen) {
-      control = volume_down;
+      control = volume_up;
     } else {
-      control = scroll_up;
+      control = scroll_down;
     }
     break;
   case MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_ANTI_CLOCKW:
     if (is_on_player_screen) {
-      control = volume_up;
+      control = volume_down;
     } else {
-      control = scroll_down;
+      control = scroll_up;
     }
     break;
   case MP3_CONTROLLER__ROTARY_ENCODER_BUTTON:
