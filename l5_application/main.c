@@ -97,14 +97,13 @@ static void mp3_reader_task(void *p) {
 
     if (xQueueReceive(q_songname, (void *)filename, portMAX_DELAY)) {
       result = f_open(&file, filename, (FA_READ));
+      f_close(&file);
 
       if (result != FR_OK) {
         fprintf(stderr, "File does not exist.\n");
         continue;
       }
     }
-
-    f_close(&file);
 
     start_of_audio = get_mp3_metadata_from_id3v1_tag(filename, &mp3);
 
@@ -125,7 +124,6 @@ static void mp3_reader_task(void *p) {
 
       f_read(&file, (void *)buffer, sizeof(file_buffer_t), &bytes_read);
       xQueueSend(q_songdata, (void *)buffer, portMAX_DELAY);
-      // vTaskDelay(100);
     }
     f_close(&file);
 
@@ -135,10 +133,10 @@ static void mp3_reader_task(void *p) {
 
 static void mp3_player_task(void *p) {
   file_buffer_t buffer;
-  uint8_t volume_50_percent = 70;
+  uint8_t volume_70_percent = 70;
 
   vs1053b__mp3_decoder_initialize();
-  vs1053b__set_volume(volume_50_percent, volume_50_percent);
+  vs1053b__set_volume(volume_70_percent, volume_70_percent);
 
   while (1) {
     xQueueReceive(q_songdata, (void *)buffer, portMAX_DELAY);

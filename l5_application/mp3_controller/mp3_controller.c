@@ -102,8 +102,8 @@ static void mp3_controller__rotary_out_clk_falling_callback(void) {
    * TODO:
    * The debouncing problem may also be solved in hardware
    **/
-  if (new_timestamp - old_timestamp > 70) {
-    if (gpio__get(mp3_controller_rotary_out_dt) ^ gpio__get(mp3_controller_rotary_out_clk)) {
+  if (new_timestamp - old_timestamp > 30) {
+    if (gpio__get(mp3_controller_rotary_out_dt)) {
       xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_clockwise, NULL);
     } else {
       xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_anti_clockwise, NULL);
@@ -172,7 +172,9 @@ void mp3_controller__scroll(const mp3_controller_s *const control) {
 
   static size_t number_of_songs = 0;
 
-  number_of_songs = mp3_song_list__get_item_count();
+  if (number_of_songs == 0) {
+    number_of_songs = mp3_song_list__get_item_count();
+  }
 
   switch (control->control) {
   case MP3_CONTROLLER__SCROLL_UP:
@@ -212,6 +214,7 @@ void mp3_controller__play_song(size_t item_number) {
     is_break_required = true;
   }
   is_song_playing = true;
+  mp3_controller__resume_song();
 }
 
 void mp3_controller__enqueue_song(size_t item_number) {
@@ -359,11 +362,13 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__PLAY_SONG:
     mp3_controller__play_song(control->argument);
+    mp3_controller__go_to_player_screen();
     printf("Play track #%d\n", control->argument + 1);
+    printf("Go to player screen\n");
     break;
   case MP3_CONTROLLER__PLAY_ENQUEUED_SONG:
     mp3_controller__play_enqueued_song();
-    printf("Play enqueued track #%d\n", control->argument + 1);
+    printf("Play enqueued track\n");
     break;
   case MP3_CONTROLLER__ENQUEUE_SONG:
     mp3_controller__enqueue_song(control->argument);
