@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "chrono": "c",
+    "mp3_metadata_decoder.h": "c",
+    "ssd1306_oled_spi.h": "c"
+  }
+}

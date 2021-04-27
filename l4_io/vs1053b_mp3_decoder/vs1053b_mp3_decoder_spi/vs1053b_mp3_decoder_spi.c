@@ -11,9 +11,7 @@ static gpio_s vs1053b_rst_pin = {GPIO__PORT_2, 6};
 
 static gpio_s vs1053b_dreq_pin = {GPIO__PORT_0, 16};
 
-void vs1053b__configure_spi() {
-
-  const uint32_t spi_clock_mhz = 1;
+void vs1053b__configure_spi(uint32_t spi_clock_mhz) {
 
   ssp0__init(spi_clock_mhz);
 

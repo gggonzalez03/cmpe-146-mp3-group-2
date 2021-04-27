@@ -6,7 +6,7 @@
 /**
  * Configure the SPI peripheral where the MP3 decoder is connected to
  **/
-void vs1053b__configure_spi();
+void vs1053b__configure_spi(uint32_t spi_clock_mhz);
 
 /**
  * Assert the reset pin. It is active low, so this means pull it to ground
