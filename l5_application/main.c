@@ -292,6 +292,57 @@ static void mp3_display_task(void *p) {
   SSD1306_ascii_display_Z();
   SSD1306_ascii_display_space();
 
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_0();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_1();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_2();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_3();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_4();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_5();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_6();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_7();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_8();
+  SSD1306_ascii_display_space();
+
+  SSD1306_ascii_display_9();
+  SSD1306_ascii_display_space();
+
   // Scrolling command //
   // SSD1306__horizontalscroll_on();
 
