@@ -11,6 +11,7 @@
 
 #include "SSD1306_OLED.h"
 #include "SSD1306_OLED_ascii.h"
+#include "SSD1306_OLED_string_display.h"
 
 #include "ff.h"
 #include "mp3_controller.h"
@@ -207,141 +208,150 @@ static void mp3_display_task(void *p) {
     SSD1306__data_write(0x00);
   }
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_A();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_B();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_B();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_C();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_C();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_D();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_D();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_E();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_F();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_F();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_G();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_G();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_H();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_H();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_I();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_I();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_J();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_J();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_K();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_K();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_L();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_L();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_M();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_M();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_N();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_N();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_O();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_P();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_P();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_Q();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_Q();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_R();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_S();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_T();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_T();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_U();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_U();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_V();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_V();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_W();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_W();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_X();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_X();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_Y();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_Y();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_Z();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_Z();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_0();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_0();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_1();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_1();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_2();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_2();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_3();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_3();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_4();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_4();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_5();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_5();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_6();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_6();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_7();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_7();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_8();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_8();
+  // SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_9();
-  SSD1306_ascii_display_space();
+  // SSD1306_ascii_display_9();
+  // SSD1306_ascii_display_space();
+
+  // SSD1306_ascii_display_char('a');
+  // SSD1306_ascii_display_space();
+
+  SSD1306_OLED_string string;
+  string.string_content = "ABC XYZ 12345";
+  string.string_size = 13;
+
+  SSD1306_ascii_display_string(string);
 
   // Scrolling command //
   // SSD1306__horizontalscroll_on();
