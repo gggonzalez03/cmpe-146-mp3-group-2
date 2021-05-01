@@ -27,37 +27,3 @@ void SSD1306__data_ds(); // sets D/C# as high = writes data
  * Transmit a byte on the SPI bus
  **/
 void SSD1306__transmit_byte(uint8_t byte);
-
-#if 0
-/**
- * Assert the reset pin. It is active low, so this means pull it to ground
- **/
-void vs1053b__reset_assert();
-
-/**
- * Deassert the reset pin. It is active low, so this maens pull it to VCC.
- **/
-void vs1053b__reset_deeassert();
-
-
-
-
-
-/**
- * Get the DREQ status
- **/
-bool vs1053b__get_dreq();
-
-
-
-/**
- * Receive a byte from the SPI bus
- **/
-uint8_t vs1053b__receive_byte();
-
-/**
- * A polling delay in milliseconds
- **/
-void vs1053b__delay_ms(uint32_t ms);
-
-#endif
