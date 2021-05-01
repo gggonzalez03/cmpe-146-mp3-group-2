@@ -10,6 +10,7 @@
 #include "sj2_cli.h"
 
 #include "SSD1306_OLED.h"
+#include "delay.h"
 
 #include "ff.h"
 #include "mp3_controller.h"
@@ -67,12 +68,11 @@ int main(void) {
   q_songname = xQueueCreate(4, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
 
-  xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM,
-              &mp3_reader_task_handle);
-  xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM,
-              &mp3_player_task_handle);
+  // xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM,
+  // &mp3_reader_task_handle); xTaskCreate(mp3_player_task, "mp3_player_task", 4096 / sizeof(void *), NULL,
+  // PRIORITY_MEDIUM, &mp3_player_task_handle);
   xTaskCreate(mp3_oled_screen_task, "mp3_oled_screen_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
-  xTaskCreate(mp3_controller_task, "mp3_controller_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+  // xTaskCreate(mp3_controller_task, "mp3_controller_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
 
   sj2_cli__init();
   vTaskStartScheduler();
@@ -153,13 +153,18 @@ static void mp3_player_task(void *p) {
 
 static void mp3_oled_screen_task(void *p) {
 
-  print_song_list();
+  // print_song_list();
 
   SSD1306__initialize();
-  SSD1306__alphabet_test();
 
-  // fade command//
-  SSD1306__fadeout_on();
+
+// Before scrolling o
+  SSD1306__displaymenu_test1();
+  delay__ms(1000);
+  // After scrolling one row up
+  SSD1306__displaymenu_test2();
+
+
   while (1) {
     vTaskDelay(portMAX_DELAY);
   }

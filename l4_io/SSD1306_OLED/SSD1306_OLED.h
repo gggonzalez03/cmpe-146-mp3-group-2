@@ -23,3 +23,9 @@ void SSD1306__zoom_in();
 
 void SSD1306__delay_ms(uint32_t ms);
 void SSD1306__alphabet_test(void);
+
+void SSD1306__page_specify(uint8_t start_location, uint8_t end_location);
+void SSD1306__column_specify(uint8_t start_location, uint8_t end_location);
+
+void SSD1306__displaymenu_test1(void);
+void SSD1306__displaymenu_test2(void);
