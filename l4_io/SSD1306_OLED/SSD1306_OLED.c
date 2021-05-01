@@ -19,7 +19,7 @@ void SSD1306__display_on(void) {
   SSD1306__write(0xAE, 0);
   SSD1306__write(0xD5, 0x80);
   SSD1306__write(0xA8, 0x3F);
-  SSD1306__write(0xD3, 0x20); // set display offset
+  // SSD1306__write(0xD3, 0x20); // set display offset
   SSD1306__write(0x40, 0);
   SSD1306__write(0x8D, 0x14);
   SSD1306__write(0xA1, 0);

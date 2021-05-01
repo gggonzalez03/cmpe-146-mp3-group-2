@@ -10,6 +10,7 @@
 #include "sj2_cli.h"
 
 #include "SSD1306_OLED.h"
+#include "SSD1306_OLED_ascii.h"
 
 #include "ff.h"
 #include "mp3_controller.h"
@@ -156,7 +157,7 @@ static void mp3_oled_screen_task(void *p) {
   print_song_list();
 
   SSD1306__initialize();
-  SSD1306__alphabet_test();
+  SSD1306_ascii_display_string("Hello World");
 
   // fade command//
   // SSD1306__fadeout_on();
