@@ -8,8 +8,47 @@
 
 bool SSD1306__initialize(void) {
   SSD1306__configure_spi();
+  SSD1306__display_on();
+  SSD1306__clear_screen();
   delay__ms(100);
   return true;
+}
+
+void SSD1306__display_on(void) {
+  // TODO: use SSD1306__command_write() instead
+  SSD1306__write(0xAE, 0);
+  SSD1306__write(0xD5, 0x80);
+  SSD1306__write(0xA8, 0x3F);
+  SSD1306__write(0xD3, 0x20); // set display offset
+  SSD1306__write(0x40, 0);
+  SSD1306__write(0x8D, 0x14);
+  SSD1306__write(0xA1, 0);
+  SSD1306__write(0xC8, 0);
+  SSD1306__write(0xDA, 0x12);
+  SSD1306__write(0x81, 0xCF);
+  SSD1306__write(0xD9, 0xF1);
+  SSD1306__write(0xDB, 0x40);
+  SSD1306__write(0xA4, 0);
+  SSD1306__write(0xA6, 0);
+  SSD1306__write(0xAF, 0);
+  SSD1306__write(0x20, 0x00);
+  SSD1306__write(0xA4, 0);
+}
+
+void SSD1306__clear_screen(void) {
+  uint8_t column_data[] = {0x00, 0x7F};
+  uint8_t page_data[] = {0x00, 0x07};
+
+  SSD1306__command_write(0x21, column_data, 2);
+  SSD1306__command_write(0x22, page_data, 2);
+
+  /**
+   * TODO:
+   * Chip select and deselect only once
+   **/ 
+  for (int i = 0; i < 1024; i++) {
+    SSD1306__data_write(0x00);
+  }
 }
 
 void SSD1306__write(uint8_t command, uint8_t data) {
@@ -36,6 +75,13 @@ void SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size) {
 
   SSD1306__ds();
 }
+void SSD1306__data_write(uint8_t data) {
+  SSD1306__cs();
+  SSD1306__data_cs();
+  SSD1306__transmit_byte(data);
+  SSD1306__data_ds();
+  SSD1306__ds();
+}
 
 void SSD1306__horizontalscroll_on() {
   SSD1306__cs();
@@ -53,47 +99,31 @@ void SSD1306__horizontalscroll_on() {
   SSD1306__ds();
 }
 
-void SSD1306__data_write(uint8_t data) {
+void SSD1306__fadeout_on() {
   SSD1306__cs();
-  SSD1306__data_cs();
-  SSD1306__transmit_byte(data);
   SSD1306__data_ds();
+
+  SSD1306__transmit_byte(0x23); // command for fade out
+  SSD1306__transmit_byte(0x20); // enable fadeout mode[3:0] and time interval between each fade step{5:4}
+
+  SSD1306__ds();
+}
+
+void SSD1306__zoom_in() {
+
+  SSD1306__write(0xDA, 0x10); // COM pin  configuration needed
+  SSD1306__cs();
+  SSD1306__data_ds();
+
+  SSD1306__transmit_byte(0xD6); // command for zoom in
+  SSD1306__transmit_byte(0x01); // enable zoom in
+
   SSD1306__ds();
 }
 
 void SSD1306__delay_ms(uint32_t ms) { delay__ms(ms); }
 
 void SSD1306__alphabet_test(void) {
-  SSD1306__write(0xAE, 0);
-  SSD1306__write(0xD5, 0x80);
-  SSD1306__write(0xA8, 0x3F);
-  SSD1306__write(0xD3, 0x20); // set display offset
-  SSD1306__write(0x40, 0);
-  SSD1306__write(0x8D, 0x14);
-  SSD1306__write(0xA1, 0);
-  SSD1306__write(0xC8, 0);
-  SSD1306__write(0xDA, 0x12);
-  SSD1306__write(0x81, 0xCF);
-  SSD1306__write(0xD9, 0xF1);
-  SSD1306__write(0xDB, 0x40);
-  SSD1306__write(0xA4, 0);
-  SSD1306__write(0xA6, 0);
-  SSD1306__write(0xAF, 0);
-  // SSD1306__write(0xA5, 0);
-  SSD1306__write(0x20, 0x00);
-  // SSD1306__write(0x21, 0);
-
-  SSD1306__write(0xA4, 0);
-
-  uint8_t column_data[] = {0x00, 0x7F};
-  uint8_t page_data[] = {0x00, 0x07};
-
-  SSD1306__command_write(0x21, column_data, 2);
-  SSD1306__command_write(0x22, page_data, 2);
-
-  for (int i = 0; i < 1024; i++) {
-    SSD1306__data_write(0x00);
-  }
 
   SSD1306_ascii_display_A();
   SSD1306_ascii_display_space();
