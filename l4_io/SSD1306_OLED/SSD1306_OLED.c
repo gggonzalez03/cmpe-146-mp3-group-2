@@ -45,7 +45,7 @@ void SSD1306__clear_screen(void) {
   /**
    * TODO:
    * Chip select and deselect only once
-   **/ 
+   **/
   for (int i = 0; i < 1024; i++) {
     SSD1306__data_write(0x00);
   }

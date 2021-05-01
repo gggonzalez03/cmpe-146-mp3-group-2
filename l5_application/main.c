@@ -159,7 +159,7 @@ static void mp3_oled_screen_task(void *p) {
   SSD1306__alphabet_test();
 
   // fade command//
-  SSD1306__fadeout_on();
+  // SSD1306__fadeout_on();
   while (1) {
     vTaskDelay(portMAX_DELAY);
   }
