@@ -80,6 +80,36 @@ static uint16_t ascii_Y[6] = {0x07, 0x0F, 0x78, 0x78, 0x0F, 0x07};
 static uint8_t ascii_Z_size = 6;
 static uint16_t ascii_Z[6] = {0x71, 0x79, 0x5D, 0x4F, 0x47, 0x43};
 
+static uint8_t ascii_0_size = 6;
+static uint16_t ascii_0[6] = {0x3E, 0x7F, 0x41, 0x41, 0x7F, 0x3E};
+
+static uint8_t ascii_1_size = 3;
+static uint16_t ascii_1[3] = {0x02, 0x7F, 0x7F};
+
+static uint8_t ascii_2_size = 6;
+static uint16_t ascii_2[6] = {0x62, 0x73, 0x59, 0x49, 0x4F, 0x46};
+
+static uint8_t ascii_3_size = 6;
+static uint16_t ascii_3[6] = {0x22, 0x63, 0x49, 0x49, 0x7F, 0x36};
+
+static uint8_t ascii_4_size = 6;
+static uint16_t ascii_4[6] = {0x18, 0x14, 0x12, 0x7F, 0x7F, 0x10};
+
+static uint8_t ascii_5_size = 5;
+static uint16_t ascii_5[5] = {0x4F, 0x4F, 0x49, 0x79, 0x31};
+
+static uint8_t ascii_6_size = 6;
+static uint16_t ascii_6[6] = {0x3C, 0x7E, 0x4B, 0x49, 0x79, 0x30};
+
+static uint8_t ascii_7_size = 6;
+static uint16_t ascii_7[6] = {0x01, 0x01, 0x71, 0x7D, 0x0F, 0x03};
+
+static uint8_t ascii_8_size = 6;
+static uint16_t ascii_8[6] = {0x36, 0x7F, 0x49, 0x49, 0x7F, 0x36};
+
+static uint8_t ascii_9_size = 6;
+static uint16_t ascii_9[6] = {0x06, 0x4F, 0x49, 0x69, 0x3F, 0x1E};
+
 static uint8_t ascii_space_size = 2;
 static uint16_t ascii_space[2] = {0x00, 0x00};
 
@@ -134,6 +164,26 @@ void SSD1306_ascii_display_X() { SSD1306_ascii_display_driver(ascii_X_size, asci
 void SSD1306_ascii_display_Y() { SSD1306_ascii_display_driver(ascii_Y_size, ascii_Y); }
 
 void SSD1306_ascii_display_Z() { SSD1306_ascii_display_driver(ascii_Z_size, ascii_Z); }
+
+void SSD1306_ascii_display_0() { SSD1306_ascii_display_driver(ascii_0_size, ascii_0); }
+
+void SSD1306_ascii_display_1() { SSD1306_ascii_display_driver(ascii_1_size, ascii_1); }
+
+void SSD1306_ascii_display_2() { SSD1306_ascii_display_driver(ascii_2_size, ascii_2); }
+
+void SSD1306_ascii_display_3() { SSD1306_ascii_display_driver(ascii_3_size, ascii_3); }
+
+void SSD1306_ascii_display_4() { SSD1306_ascii_display_driver(ascii_4_size, ascii_4); }
+
+void SSD1306_ascii_display_5() { SSD1306_ascii_display_driver(ascii_5_size, ascii_5); }
+
+void SSD1306_ascii_display_6() { SSD1306_ascii_display_driver(ascii_6_size, ascii_6); }
+
+void SSD1306_ascii_display_7() { SSD1306_ascii_display_driver(ascii_7_size, ascii_7); }
+
+void SSD1306_ascii_display_8() { SSD1306_ascii_display_driver(ascii_8_size, ascii_8); }
+
+void SSD1306_ascii_display_9() { SSD1306_ascii_display_driver(ascii_9_size, ascii_9); }
 
 void SSD1306_ascii_display_space() { SSD1306_ascii_display_driver(ascii_space_size, ascii_space); }
 
