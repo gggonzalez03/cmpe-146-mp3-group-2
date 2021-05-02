@@ -154,7 +154,7 @@ static void mp3_player_task(void *p) {
 
 static void mp3_oled_screen_task(void *p) {
 
-  // print_song_list();
+  print_song_list();
 
   SSD1306__initialize();
 
