@@ -5,27 +5,25 @@
 
 bool SSD1306__initialize(void);
 
-void SSD1306__write(uint8_t command, uint8_t data); // Needs to go
+void SSD1306__send_data(uint8_t *data, int size); // This stays
 
-void SSD1306__command_write(uint8_t command, uint8_t *data, uint8_t size); // This stays
-void SSD1306__data_write(uint8_t data);
+void SSD1306__send_command(uint8_t *command, int size);
 
-void SSD1306__display_on(void);
+void SSD1306__display_initialize(void);
+
 void SSD1306__clear_screen(void);
 
-void SSD1306__set_starting_row(uint8_t row);
-void SSD1306__set_starting_column(uint8_t column);
+void SSD1306__page_specify(uint8_t start_location_command, uint8_t end_location_command);
 
-// Need to be updated once SSD1306__set_starting_row and SSD1306__set_starting_column work
+void SSD1306__column_specify(uint8_t start_location_command, uint8_t end_location_command);
+
 void SSD1306__horizontalscroll();
+
 void SSD1306__fadeout_on();
-void SSD1306__zoom_in();
 
 void SSD1306__delay_ms(uint32_t ms);
-void SSD1306__alphabet_test(void);
 
-void SSD1306__page_specify(uint8_t start_location, uint8_t end_location);
-void SSD1306__column_specify(uint8_t start_location, uint8_t end_location);
-
+/// Test Functions ////
 void SSD1306__displaymenu_test1(void);
+
 void SSD1306__displaymenu_test2(void);

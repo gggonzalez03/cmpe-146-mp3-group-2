@@ -39,8 +39,8 @@ void SSD1306__configure_spi() {
 
 void SSD1306__cs() { gpio__reset(SSD1306_cs_pin); }
 void SSD1306__ds() { gpio__set(SSD1306_cs_pin); }
-void SSD1306__data_ds() { gpio__reset(SSD1306_dcs_pin); }
-void SSD1306__data_cs() { gpio__set(SSD1306_dcs_pin); }
+void SSD1306__data_ds() { gpio__reset(SSD1306_dcs_pin); } // write command
+void SSD1306__data_cs() { gpio__set(SSD1306_dcs_pin); }   // write data
 
 void SSD1306__transmit_byte(uint8_t byte) { (void)ssp1__exchange_byte(byte); }
 

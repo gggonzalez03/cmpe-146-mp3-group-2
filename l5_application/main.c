@@ -157,13 +157,11 @@ static void mp3_oled_screen_task(void *p) {
 
   SSD1306__initialize();
 
-
-// Before scrolling o
+  // Before scrolling o
   SSD1306__displaymenu_test1();
-  delay__ms(1000);
+  delay__ms(3000);
   // After scrolling one row up
   SSD1306__displaymenu_test2();
-
 
   while (1) {
     vTaskDelay(portMAX_DELAY);
