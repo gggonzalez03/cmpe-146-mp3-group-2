@@ -80,6 +80,36 @@ static uint8_t ascii_Y[6] = {0x07, 0x0F, 0x78, 0x78, 0x0F, 0x07};
 static uint8_t ascii_Z_size = 6;
 static uint8_t ascii_Z[6] = {0x71, 0x79, 0x5D, 0x4F, 0x47, 0x43};
 
+static uint8_t ascii_0_size = 6;
+static uint8_t ascii_0[6] = {0x3E, 0x7F, 0x41, 0x41, 0x7F, 0x3E};
+
+static uint8_t ascii_1_size = 3;
+static uint8_t ascii_1[3] = {0x02, 0x7F, 0x7F};
+
+static uint8_t ascii_2_size = 6;
+static uint8_t ascii_2[6] = {0x62, 0x73, 0x59, 0x49, 0x4F, 0x46};
+
+static uint8_t ascii_3_size = 6;
+static uint8_t ascii_3[6] = {0x22, 0x63, 0x49, 0x49, 0x7F, 0x36};
+
+static uint8_t ascii_4_size = 6;
+static uint8_t ascii_4[6] = {0x18, 0x14, 0x12, 0x7F, 0x7F, 0x10};
+
+static uint8_t ascii_5_size = 5;
+static uint8_t ascii_5[5] = {0x4F, 0x4F, 0x49, 0x79, 0x31};
+
+static uint8_t ascii_6_size = 6;
+static uint8_t ascii_6[6] = {0x3C, 0x7E, 0x4B, 0x49, 0x79, 0x30};
+
+static uint8_t ascii_7_size = 6;
+static uint8_t ascii_7[6] = {0x01, 0x01, 0x71, 0x7D, 0x0F, 0x03};
+
+static uint8_t ascii_8_size = 6;
+static uint8_t ascii_8[6] = {0x36, 0x7F, 0x49, 0x49, 0x7F, 0x36};
+
+static uint8_t ascii_9_size = 6;
+static uint8_t ascii_9[6] = {0x06, 0x4F, 0x49, 0x69, 0x3F, 0x1E};
+
 static uint8_t ascii_space_size = 2;
 static uint8_t ascii_space[2] = {0x00, 0x00};
 
@@ -135,12 +165,219 @@ void SSD1306_ascii_display_Y() { SSD1306_ascii_display_driver(ascii_Y_size, asci
 
 void SSD1306_ascii_display_Z() { SSD1306_ascii_display_driver(ascii_Z_size, ascii_Z); }
 
+void SSD1306_ascii_display_0() { SSD1306_ascii_display_driver(ascii_0_size, ascii_0); }
+
+void SSD1306_ascii_display_1() { SSD1306_ascii_display_driver(ascii_1_size, ascii_1); }
+
+void SSD1306_ascii_display_2() { SSD1306_ascii_display_driver(ascii_2_size, ascii_2); }
+
+void SSD1306_ascii_display_3() { SSD1306_ascii_display_driver(ascii_3_size, ascii_3); }
+
+void SSD1306_ascii_display_4() { SSD1306_ascii_display_driver(ascii_4_size, ascii_4); }
+
+void SSD1306_ascii_display_5() { SSD1306_ascii_display_driver(ascii_5_size, ascii_5); }
+
+void SSD1306_ascii_display_6() { SSD1306_ascii_display_driver(ascii_6_size, ascii_6); }
+
+void SSD1306_ascii_display_7() { SSD1306_ascii_display_driver(ascii_7_size, ascii_7); }
+
+void SSD1306_ascii_display_8() { SSD1306_ascii_display_driver(ascii_8_size, ascii_8); }
+
+void SSD1306_ascii_display_9() { SSD1306_ascii_display_driver(ascii_9_size, ascii_9); }
+
 void SSD1306_ascii_display_space() { SSD1306_ascii_display_driver(ascii_space_size, ascii_space); }
 
 void SSD1306_ascii_display_driver(uint8_t ascii_letter_size, uint8_t ascii_letter[]) {
   SSD1306__send_data(ascii_letter, ascii_letter_size);
+}
 
-  //  for (int i = 0; i < ascii_letter_size; i++) {
-  //   SSD1306__send_data(ascii_letter[i], 1);
-  //  / }
+void SSD1306_ascii_display_string(const char *const string_to_print) {
+  uint32_t index = 0UL;
+  while (string_to_print[index] != '\0') {
+    SSD1306_ascii_display_char(string_to_print[index]);
+    SSD1306_ascii_display_space();
+    ++index;
+  }
+}
+
+void SSD1306_ascii_display_char(char character) {
+  switch (character) {
+  case 'A':
+  case 'a':
+    SSD1306_ascii_display_A();
+    break;
+
+  case 'B':
+  case 'b':
+    SSD1306_ascii_display_B();
+    break;
+
+  case 'C':
+  case 'c':
+    SSD1306_ascii_display_C();
+    break;
+
+  case 'D':
+  case 'd':
+    SSD1306_ascii_display_D();
+    break;
+
+  case 'E':
+  case 'e':
+    SSD1306_ascii_display_E();
+    break;
+
+  case 'F':
+  case 'f':
+    SSD1306_ascii_display_F();
+    break;
+
+  case 'G':
+  case 'g':
+    SSD1306_ascii_display_G();
+    break;
+
+  case 'H':
+  case 'h':
+    SSD1306_ascii_display_H();
+    break;
+
+  case 'I':
+  case 'i':
+    SSD1306_ascii_display_I();
+    break;
+
+  case 'J':
+  case 'j':
+    SSD1306_ascii_display_J();
+    break;
+
+  case 'K':
+  case 'k':
+    SSD1306_ascii_display_K();
+    break;
+
+  case 'L':
+  case 'l':
+    SSD1306_ascii_display_L();
+    break;
+
+  case 'M':
+  case 'm':
+    SSD1306_ascii_display_M();
+    break;
+
+  case 'N':
+  case 'n':
+    SSD1306_ascii_display_N();
+    break;
+
+  case 'O':
+  case 'o':
+    SSD1306_ascii_display_O();
+    break;
+
+  case 'P':
+  case 'p':
+    SSD1306_ascii_display_P();
+    break;
+
+  case 'Q':
+  case 'q':
+    SSD1306_ascii_display_Q();
+    break;
+
+  case 'R':
+  case 'r':
+    SSD1306_ascii_display_R();
+    break;
+
+  case 'S':
+  case 's':
+    SSD1306_ascii_display_S();
+    break;
+
+  case 'T':
+  case 't':
+    SSD1306_ascii_display_T();
+    break;
+
+  case 'U':
+  case 'u':
+    SSD1306_ascii_display_U();
+    break;
+
+  case 'V':
+  case 'v':
+    SSD1306_ascii_display_V();
+    break;
+
+  case 'W':
+  case 'w':
+    SSD1306_ascii_display_W();
+    break;
+
+  case 'X':
+  case 'x':
+    SSD1306_ascii_display_X();
+    break;
+
+  case 'Y':
+  case 'y':
+    SSD1306_ascii_display_Y();
+    break;
+
+  case 'Z':
+  case 'z':
+    SSD1306_ascii_display_Z();
+    break;
+
+  case '0':
+    SSD1306_ascii_display_0();
+    break;
+
+  case '1':
+    SSD1306_ascii_display_1();
+    break;
+
+  case '2':
+    SSD1306_ascii_display_2();
+    break;
+
+  case '3':
+    SSD1306_ascii_display_3();
+    break;
+
+  case '4':
+    SSD1306_ascii_display_4();
+    break;
+
+  case '5':
+    SSD1306_ascii_display_5();
+    break;
+
+  case '6':
+    SSD1306_ascii_display_6();
+    break;
+
+  case '7':
+    SSD1306_ascii_display_7();
+    break;
+
+  case '8':
+    SSD1306_ascii_display_8();
+    break;
+
+  case '9':
+    SSD1306_ascii_display_9();
+    break;
+
+  case ' ':
+    SSD1306_ascii_display_space();
+    break;
+
+  default:
+    SSD1306_ascii_display_space();
+    break;
+  }
 }

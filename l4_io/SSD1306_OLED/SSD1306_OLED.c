@@ -89,6 +89,7 @@ void SSD1306__page_specify(uint8_t start_location_command, uint8_t end_location_
   uint8_t p_commands[3] = {page_command, start_location_command, end_location_command};
   SSD1306__send_command(p_commands, 3);
 }
+
 void SSD1306__column_specify(uint8_t start_location_command, uint8_t end_location_command) {
   uint8_t column_command = 0x21;
   uint8_t c_commands[3] = {column_command, start_location_command, end_location_command};
