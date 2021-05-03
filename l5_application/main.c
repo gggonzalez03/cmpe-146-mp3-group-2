@@ -9,12 +9,10 @@
 #include "lpc40xx.h"
 #include "sj2_cli.h"
 
-#include "SSD1306_OLED.h"
-#include "SSD1306_OLED_ascii.h"
-
 #include "ff.h"
 #include "mp3_controller.h"
 #include "mp3_metadata_decoder.h"
+#include "mp3_oled_controller.h"
 #include "mp3_song_list.h"
 #include "vs1053b_mp3_decoder.h"
 
@@ -154,15 +152,8 @@ static void mp3_player_task(void *p) {
 
 static void mp3_oled_screen_task(void *p) {
 
-  print_song_list();
-
-  SSD1306__initialize();
-
-  // Before scrolling o
-  SSD1306__displaymenu_test1();
-  vTaskDelay(3000);
-  // After scrolling one row up
-  SSD1306__displaymenu_test2();
+  mp3_song_list__populate();
+  mp3_oled_controller__initialize();
 
   while (1) {
     vTaskDelay(portMAX_DELAY);

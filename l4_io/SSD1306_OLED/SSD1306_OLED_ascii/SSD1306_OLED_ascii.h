@@ -79,4 +79,6 @@ void SSD1306_ascii_display_driver(uint8_t ascii_letter_size, uint8_t ascii_lette
 
 void SSD1306_ascii_display_string(const char *const string);
 
+void SSD1306_ascii_display_string_with_max_length(const char *const string_to_print, const uint32_t *const max_length);
+
 void SSD1306_ascii_display_char(char character);

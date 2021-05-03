@@ -1,6 +1,8 @@
-#include "SSD1306_OLED_ascii.h"
-#include "SSD1306_OLED.h"
+#include <stddef.h>
 #include <stdint.h>
+
+#include "SSD1306_OLED.h"
+#include "SSD1306_OLED_ascii.h"
 
 static uint8_t ascii_A_size = 5;
 static uint8_t ascii_A[5] = {0x7E, 0x13, 0x13, 0x7F, 0x7E};
@@ -197,6 +199,20 @@ void SSD1306_ascii_display_string(const char *const string_to_print) {
     SSD1306_ascii_display_char(string_to_print[index]);
     SSD1306_ascii_display_space();
     ++index;
+  }
+}
+
+void SSD1306_ascii_display_string_with_max_length(const char *const string_to_print, const uint32_t *const max_length) {
+  uint32_t index = 0UL;
+  while (string_to_print[index] != '\0') {
+    SSD1306_ascii_display_char(string_to_print[index]);
+    SSD1306_ascii_display_space();
+
+    index++;
+
+    if (max_length != NULL && index >= *max_length) {
+      break;
+    }
   }
 }
 

@@ -27,7 +27,7 @@ void mp3_oled_controller__initialize(void);
 /**
  * Show the song list screen
  **/
-void mp3_oled_controller__song_list_show();
+void mp3_oled_controller__song_list_show(void);
 
 /**
  * Highlight a song in the list
