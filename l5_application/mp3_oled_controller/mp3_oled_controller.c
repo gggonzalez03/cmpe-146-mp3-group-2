@@ -57,9 +57,6 @@ void mp3_oled_controller__song_list_show(void) {
     SSD1306__column_specify(start_column, end_column);
 
     if (mp3_oled_screen.highlighted_song_index == mp3_oled_screen.current_top_song_index + index) {
-      /**
-       * TODO: Print highlighted songname
-       **/
       SSD1306_ascii_display_string_with_max_length(
           mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length, true);
       continue;
@@ -119,13 +116,30 @@ void mp3_oled_controller__song_list_scroll_down(void);
 /**
  * Show the player screen
  **/
-void mp3_oled_controller__player_show(void);
+void mp3_oled_controller__player_show(void) {
+  uint8_t start_row = 0x00;
+  uint8_t end_row = 0x00;
+  uint8_t start_column = oled_start_column_margin;
+  uint8_t end_column = oled_end_column_margin;
+  uint32_t max_length = 10;
+
+  SSD1306__clear_screen();
+
+  SSD1306__page_specify(start_row, end_row);
+  SSD1306__column_specify(start_column, end_column);
+
+  SSD1306_ascii_display_string_with_max_length(mp3_song_list__get_name_for_item(mp3_oled_screen.playing_song_index),
+                                               &max_length, false);
+}
 
 /**
  * Set playing song
  * @param playing_song_index is the index of the playing song
  **/
-void mp3_oled_controller__player_set_playing_song(size_t playing_song_index);
+void mp3_oled_controller__player_set_playing_song(size_t playing_song_index) {
+  mp3_oled_screen.playing_song_index = playing_song_index;
+  mp3_oled_controller__player_show();
+}
 
 /**
  * Set volume

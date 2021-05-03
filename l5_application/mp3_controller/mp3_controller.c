@@ -339,10 +339,12 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   switch (control->control) {
   case MP3_CONTROLLER__SHOW_SONGS:
     mp3_controller__go_to_song_list_screen();
+    mp3_oled_controller__song_list_show();
     printf("Go to song list screen\n");
     break;
   case MP3_CONTROLLER__SHOW_PLAYER:
     mp3_controller__go_to_player_screen();
+    mp3_oled_controller__player_show();
     printf("Go to player screen\n");
     break;
   case MP3_CONTROLLER__SCROLL_UP:
@@ -366,11 +368,13 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__PLAY_SONG:
     mp3_controller__play_song(control->argument);
     mp3_controller__go_to_player_screen();
+    mp3_oled_controller__player_set_playing_song(control->argument);
     printf("Play track #%d\n", control->argument + 1);
     printf("Go to player screen\n");
     break;
   case MP3_CONTROLLER__PLAY_ENQUEUED_SONG:
     mp3_controller__play_enqueued_song();
+    mp3_oled_controller__player_set_playing_song(control->argument);
     printf("Play enqueued track\n");
     break;
   case MP3_CONTROLLER__ENQUEUE_SONG:

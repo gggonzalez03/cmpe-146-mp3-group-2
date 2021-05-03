@@ -1,0 +1,7 @@
+#pragma once
+
+void mp3_oled_controller_icons__print_left_nav(void);
+void mp3_oled_controller_icons__print_right_nav(void);
+void mp3_oled_controller_icons__print_play_icon(void);
+void mp3_oled_controller_icons__print_pause_icon(void);
+void mp3_oled_controller_icons__print_next_song_icon(void);
