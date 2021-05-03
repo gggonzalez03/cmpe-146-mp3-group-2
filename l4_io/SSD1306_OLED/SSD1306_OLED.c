@@ -132,331 +132,331 @@ void SSD1306__delay_ms(uint32_t ms) { delay__ms(ms); }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void SSD1306__displaymenu_test1(void) {
+// void SSD1306__displaymenu_test1(void) {
 
-  // specifying location address
-  SSD1306__page_specify(0x00, 0x00);
-  SSD1306__column_specify(0x20, 0x7F);
+//   // specifying location address
+//   SSD1306__page_specify(0x00, 0x00);
+//   SSD1306__column_specify(0x20, 0x7F);
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_U();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_U();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_M();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_M();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_U();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_U();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_I();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_I();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_C();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_C();
+//   SSD1306_ascii_display_space();
 
-  /////////////
+//   /////////////
 
-  SSD1306__page_specify(0x01, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x01, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  ////////////
+//   ////////////
 
-  SSD1306__page_specify(0x02, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x02, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_P();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_P();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_C();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_C();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_H();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_H();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  //
+//   //
 
-  SSD1306__page_specify(0x03, 0x01);
-  SSD1306__column_specify(0x20, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x03, 0x01);
+//   SSD1306__column_specify(0x20, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_G();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_G();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_D();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_D();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_D();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_D();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_Y();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_Y();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  ///
+//   ///
 
-  SSD1306__page_specify(0x04, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x04, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_Y();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_Y();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_L();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_L();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_L();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_L();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_W();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_W();
+//   SSD1306_ascii_display_space();
 
-  ///
+//   ///
 
-  SSD1306__page_specify(0x05, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x05, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_B();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_B();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_T();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_T();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_H();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_H();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
-}
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
+// }
 
-//////////////////////////////////////////
-void SSD1306__displaymenu_test2(void) {
-  SSD1306__clear_screen();
-  // specifying location address
-  SSD1306__page_specify(0x00, 0x00);
-  SSD1306__column_specify(0x20, 0x7F);
+// //////////////////////////////////////////
+// void SSD1306__displaymenu_test2(void) {
+//   SSD1306__clear_screen();
+//   // specifying location address
+//   SSD1306__page_specify(0x00, 0x00);
+//   SSD1306__column_specify(0x20, 0x7F);
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_U();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_U();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_M();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_M();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_U();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_U();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_I();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_I();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_C();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_C();
+//   SSD1306_ascii_display_space();
 
-  /////////////
+//   /////////////
 
-  ////////////
+//   ////////////
 
-  SSD1306__page_specify(0x01, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x01, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_P();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_P();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_C();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_C();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_H();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_H();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  //
+//   //
 
-  SSD1306__page_specify(0x02, 0x01);
-  SSD1306__column_specify(0x20, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x02, 0x01);
+//   SSD1306__column_specify(0x20, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_G();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_G();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_D();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_D();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_D();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_D();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_Y();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_Y();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  ///
+//   ///
 
-  SSD1306__page_specify(0x03, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x03, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_Y();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_Y();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_L();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_L();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_L();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_L();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_W();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_W();
+//   SSD1306_ascii_display_space();
 
-  ///
+//   ///
 
-  SSD1306__page_specify(0x04, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x04, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_B();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_B();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_A();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_A();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_T();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_T();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_H();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_H();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306__page_specify(0x05, 0x01);
-  SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
+//   SSD1306__page_specify(0x05, 0x01);
+//   SSD1306__column_specify(0x24, 0x7F); // need to specify last column of that row
 
-  SSD1306_ascii_display_R();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_R();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_O();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_O();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_E();
-  SSD1306_ascii_display_space();
+//   SSD1306_ascii_display_E();
+//   SSD1306_ascii_display_space();
 
-  SSD1306_ascii_display_S();
-  SSD1306_ascii_display_space();
-}
+//   SSD1306_ascii_display_S();
+//   SSD1306_ascii_display_space();
+// }

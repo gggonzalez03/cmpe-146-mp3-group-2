@@ -60,11 +60,13 @@ void mp3_oled_controller__song_list_show(void) {
       /**
        * TODO: Print highlighted songname
        **/
+      SSD1306_ascii_display_string_with_max_length(
+          mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length, true);
       continue;
     }
 
     SSD1306_ascii_display_string_with_max_length(
-        mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length);
+        mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length, false);
   }
 }
 
