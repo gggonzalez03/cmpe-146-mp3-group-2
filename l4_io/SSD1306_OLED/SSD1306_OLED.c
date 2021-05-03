@@ -14,6 +14,13 @@ bool SSD1306__initialize(void) {
 void SSD1306__send_data(uint8_t *data, int size) {
   SSD1306__cs();
 
+  /**
+   * TODO:
+   * This is inefficient.
+   * Should only select and deselect data chip select once.
+   * Once this is improved, test it.
+   **/
+
   for (int index = 0; index < size; index++) {
     SSD1306__data_cs();
     SSD1306__transmit_byte(data[index]);

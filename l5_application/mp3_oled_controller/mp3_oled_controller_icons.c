@@ -2,6 +2,7 @@
 
 #include "SSD1306_OLED.h"
 #include "SSD1306_OLED_ascii.h"
+#include "SSD1306_OLED_spi.h"
 #include "mp3_oled_controller_icons.h"
 
 extern uint8_t mp3_oled_controller__max_lines_on_screen;
@@ -47,10 +48,10 @@ static void mp3_oled_controller_icons__print_left_arrow(uint8_t *start_page) {
 
 static void mp3_oled_controller_icons__print_right_arrow(uint8_t *start_page) {
   static const uint8_t triangle_width = nav_width;
-  static uint8_t upper_triangle[0x0F] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                         0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, 0x00};
-  static uint8_t lower_triangle[0x0F] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                         0x0F, 0x07, 0x03, 0x01, 0x00, 0x00, 0x00};
+  static uint8_t upper_triangle[0x0F] = {0x00, 0x00, 0x00, 0x00, 0xF8, 0xF0, 0xE0, 0xC0,
+                                         0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  static uint8_t lower_triangle[0x0F] = {0x00, 0x00, 0x00, 0x00, 0x0F, 0x07, 0x03, 0x01,
+                                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
   SSD1306__page_specify(*start_page, *start_page);
   SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin, mp3_oled_controller__oled_end_column);
@@ -109,32 +110,32 @@ static void mp3_oled_controller_icons__print_songs_left_nav(uint8_t *start_page)
 
 static void mp3_oled_controller_icons__print_player_right_nav(uint8_t *start_page) {
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_P(false);
   (*start_page)++;
 
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_L(false);
   (*start_page)++;
 
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_A(false);
   (*start_page)++;
 
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_Y(false);
   (*start_page)++;
 
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_E(false);
   (*start_page)++;
 
   SSD1306__page_specify(*start_page, *start_page);
-  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 8, mp3_oled_controller__oled_end_column);
+  SSD1306__column_specify(mp3_oled_controller__oled_end_column_margin + 4, mp3_oled_controller__oled_end_column);
   SSD1306_ascii_display_R(false);
   (*start_page)++;
 }
@@ -249,4 +250,40 @@ void mp3_oled_controller_icons__print_next_song_icon(void) {
   SSD1306__page_specify(start_page, start_page);
   SSD1306__column_specify(start_column, end_column);
   SSD1306__send_data(lower_triangles, next_icon_width);
+}
+
+void mp3_oled_controller_icons__print_volume_bar_icon(uint8_t level) {
+  uint8_t start_page = 7;
+
+  static const uint8_t volume_bar_width = 100;
+  static const uint8_t volume_circle_width = 5;
+  const uint8_t start_column = mp3_oled_controller__oled_start_column_margin + 1;
+  const uint8_t end_column = mp3_oled_controller__oled_end_column_margin - 1;
+
+  static uint8_t volume_bar_line = 0x18;
+  static uint8_t volume_circle[5] = {0x3C, 0x7E, 0x7E, 0x7E, 0x3C};
+
+  uint8_t volume_circle_start_index = 0;
+
+  // level 5 is the lowest we can show
+  if (level < volume_circle_width) {
+    level = 5;
+  }
+
+  SSD1306__page_specify(start_page, start_page);
+  SSD1306__column_specify(start_column, end_column);
+
+  SSD1306__cs();
+  SSD1306__data_cs();
+  for (int index = 0; index < volume_bar_width; index++) {
+    if (index >= (level - volume_circle_width) && volume_circle_start_index < volume_circle_width) {
+      SSD1306__transmit_byte(volume_circle[volume_circle_start_index]);
+      volume_circle_start_index++;
+      continue;
+    }
+
+    SSD1306__transmit_byte(volume_bar_line);
+  }
+  SSD1306__data_ds();
+  SSD1306__ds();
 }

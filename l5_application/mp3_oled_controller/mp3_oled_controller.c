@@ -10,8 +10,8 @@ const uint8_t mp3_oled_controller__max_lines_on_screen = 8;
 const uint8_t mp3_oled_controller__oled_start_column = 0x00;
 const uint8_t mp3_oled_controller__oled_end_column = 0x7F;
 
-const uint8_t mp3_oled_controller__oled_start_column_margin = 0x0F;
-const uint8_t mp3_oled_controller__oled_end_column_margin = 0x70;
+const uint8_t mp3_oled_controller__oled_start_column_margin = 0x0D;
+const uint8_t mp3_oled_controller__oled_end_column_margin = 0x72;
 
 const uint8_t mp3_oled_controller__oled_center_horizontal =
     (mp3_oled_controller__oled_end_column - mp3_oled_controller__oled_start_column) / 2;
@@ -150,6 +150,10 @@ void mp3_oled_controller__player_show(void) {
   SSD1306__clear_screen();
   mp3_oled_controller__player_print_song_metadata();
   mp3_oled_controller_icons__print_left_nav(true);
+
+  mp3_oled_controller_icons__print_play_icon();
+  mp3_oled_controller_icons__print_next_song_icon();
+  mp3_oled_controller_icons__print_volume_bar_icon(0);
 }
 
 /**
