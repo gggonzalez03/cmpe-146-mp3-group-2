@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "mp3_controller.h"
+#include "mp3_oled_controller.h"
 #include "mp3_song_list.h"
 
 #include "gpio.h"
@@ -346,10 +347,12 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__SCROLL_UP:
     mp3_controller__scroll(control);
+    mp3_oled_controller__song_list_highlight_song(scroll_index);
     printf("Scroll up: %s\n", mp3_song_list__get_name_for_item(scroll_index));
     break;
   case MP3_CONTROLLER__SCROLL_DOWN:
     mp3_controller__scroll(control);
+    mp3_oled_controller__song_list_highlight_song(scroll_index);
     printf("Scroll down: %s\n", mp3_song_list__get_name_for_item(scroll_index));
     break;
   case MP3_CONTROLLER__VOLUME_UP:

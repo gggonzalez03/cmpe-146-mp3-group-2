@@ -6,8 +6,8 @@
  *
  ***********************************************************************************/
 static mp3_oled_controller_s mp3_oled_screen = {.current_top_song_index = 0,
-                                                .current_bottom_song_index = 3,
-                                                .current_top_song_index = 0,
+                                                .current_bottom_song_index = 7,
+                                                .highlighted_song_index = 0,
                                                 .playing_song_index = -1,
                                                 .max_lines_on_screen = 8,
                                                 .is_song_playing = false,
@@ -50,9 +50,18 @@ void mp3_oled_controller__song_list_show(void) {
   uint8_t end_column = oled_end_column_margin;
   uint32_t max_length = 10;
 
+  SSD1306__clear_screen();
+
   for (size_t index = 0; index < mp3_oled_screen.max_lines_on_screen; index++) {
     SSD1306__page_specify(start_row + index, end_row + index);
     SSD1306__column_specify(start_column, end_column);
+
+    if (mp3_oled_screen.highlighted_song_index == mp3_oled_screen.current_top_song_index + index) {
+      /**
+       * TODO: Print highlighted songname
+       **/
+      continue;
+    }
 
     SSD1306_ascii_display_string_with_max_length(
         mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length);
@@ -66,7 +75,20 @@ void mp3_oled_controller__song_list_show(void) {
  *
  * @param song_index is the index of the song to be highlighted
  **/
-void mp3_oled_controller__song_list_highlight_song(size_t song_index);
+void mp3_oled_controller__song_list_highlight_song(size_t song_index) {
+
+  if (song_index < mp3_oled_screen.current_top_song_index) {
+    mp3_oled_screen.current_top_song_index = song_index;
+    mp3_oled_screen.current_bottom_song_index = song_index + mp3_oled_screen.max_lines_on_screen - 1;
+  } else if (song_index > mp3_oled_screen.current_bottom_song_index) {
+    mp3_oled_screen.current_bottom_song_index = song_index;
+    mp3_oled_screen.current_top_song_index = song_index - mp3_oled_screen.max_lines_on_screen + 1;
+  }
+
+  mp3_oled_screen.highlighted_song_index = song_index;
+
+  mp3_oled_controller__song_list_show();
+}
 
 /**
  * Highlight next song.

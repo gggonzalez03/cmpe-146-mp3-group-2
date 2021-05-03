@@ -22,6 +22,17 @@ void SSD1306__send_data(uint8_t *data, int size) {
   SSD1306__ds();
 }
 
+void SSD1306__send_data_negative(uint8_t *data, int size) {
+  SSD1306__cs();
+
+  for (int index = 0; index < size; index++) {
+    SSD1306__data_cs();
+    SSD1306__transmit_byte(~(data[index]));
+    SSD1306__data_ds();
+  }
+  SSD1306__ds();
+}
+
 void SSD1306__send_command(uint8_t *command, int size) {
   SSD1306__cs();
   SSD1306__data_ds();

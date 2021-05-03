@@ -5,7 +5,9 @@
 
 bool SSD1306__initialize(void);
 
-void SSD1306__send_data(uint8_t *data, int size); // This stays
+void SSD1306__send_data(uint8_t *data, int size);
+
+void SSD1306__send_data_negative(uint8_t *data, int size);
 
 void SSD1306__send_command(uint8_t *command, int size);
 
