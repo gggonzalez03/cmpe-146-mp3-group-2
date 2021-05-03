@@ -1,21 +1,23 @@
 #include "mp3_oled_controller.h"
+#include "mp3_oled_controller_icons.h"
 
 /************************************************************************************
  *
  *                                PRIVATE DECLARATIONS
  *
  ***********************************************************************************/
+const uint8_t mp3_oled_controller__max_lines_on_screen = 8;
+const uint8_t mp3_oled_controller__oled_start_column = 0x00;
+const uint8_t mp3_oled_controller__oled_end_column = 0x7F;
+
+const uint8_t mp3_oled_controller__oled_start_column_margin = 0x0F;
+const uint8_t mp3_oled_controller__oled_end_column_margin = 0x70;
+
 static mp3_oled_controller_s mp3_oled_screen = {.current_top_song_index = 0,
                                                 .current_bottom_song_index = 7,
                                                 .highlighted_song_index = 0,
-                                                .max_lines_on_screen = 8,
+                                                .max_lines_on_screen = mp3_oled_controller__max_lines_on_screen,
                                                 .mp3_playing_song = NULL};
-
-static const uint8_t oled_start_column = 0x00;
-static const uint8_t oled_end_column = 0x7F;
-
-static const uint8_t oled_start_column_margin = 0x0A;
-static const uint8_t oled_end_column_margin = 0x75;
 
 static const uint32_t max_length = 12;
 
@@ -32,19 +34,19 @@ static void mp3_oled_controller__player_print_song_metadata(void) {
 
   if (mp3_oled_screen.mp3_playing_song != NULL) {
     SSD1306__page_specify(start_row, end_row);
-    SSD1306__column_specify(oled_start_column_margin, oled_end_column_margin);
+    SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin, mp3_oled_controller__oled_end_column_margin);
     SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->song_title, &max_length, false);
 
     SSD1306__page_specify(++start_row, ++end_row);
-    SSD1306__column_specify(oled_start_column_margin, oled_end_column_margin);
+    SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin, mp3_oled_controller__oled_end_column_margin);
     SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->artist, &max_length, false);
 
     SSD1306__page_specify(++start_row, ++end_row);
-    SSD1306__column_specify(oled_start_column_margin, oled_end_column_margin);
+    SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin, mp3_oled_controller__oled_end_column_margin);
     SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->album, &max_length, false);
 
     SSD1306__page_specify(++start_row, ++end_row);
-    SSD1306__column_specify(oled_start_column_margin, oled_end_column_margin);
+    SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin, mp3_oled_controller__oled_end_column_margin);
     SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->year, &max_length, false);
   }
 }
@@ -69,8 +71,8 @@ void mp3_oled_controller__initialize(void) {
 void mp3_oled_controller__song_list_show(void) {
   uint8_t start_row = 0x00;
   uint8_t end_row = 0x00;
-  uint8_t start_column = oled_start_column_margin;
-  uint8_t end_column = oled_end_column_margin;
+  uint8_t start_column = mp3_oled_controller__oled_start_column_margin;
+  uint8_t end_column = mp3_oled_controller__oled_end_column_margin;
 
   SSD1306__clear_screen();
 
@@ -87,6 +89,9 @@ void mp3_oled_controller__song_list_show(void) {
     SSD1306_ascii_display_string_with_max_length(
         mp3_song_list__get_name_for_item(mp3_oled_screen.current_top_song_index + index), &max_length, false);
   }
+
+  mp3_oled_controller_icons__print_left_nav(false);
+  mp3_oled_controller_icons__print_right_nav(false);
 }
 
 /**
@@ -141,11 +146,12 @@ void mp3_oled_controller__song_list_scroll_down(void);
 void mp3_oled_controller__player_show(void) {
   uint8_t start_row = 0x00;
   uint8_t end_row = 0x00;
-  uint8_t start_column = oled_start_column_margin;
-  uint8_t end_column = oled_end_column_margin;
+  uint8_t start_column = mp3_oled_controller__oled_start_column_margin;
+  uint8_t end_column = mp3_oled_controller__oled_end_column_margin;
 
   SSD1306__clear_screen();
   mp3_oled_controller__player_print_song_metadata();
+  mp3_oled_controller_icons__print_left_nav(true);
 }
 
 /**
