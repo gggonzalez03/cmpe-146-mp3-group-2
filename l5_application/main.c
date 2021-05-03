@@ -34,18 +34,7 @@ TaskHandle_t mp3_player_task_handle;
  *                    Helper Functions
  **********************************************************/
 
-static void print_mp3_metadata(mp3_s *mp3) {
-  // printf("File Identifier: %s\n", mp3->tag);
-  // printf("ID3v2 version: %d, revision: %d\n", mp3->id3_version[0], mp3->id3_version[1]);
-  // printf("ID3v2 flags: %d\n", mp3->id3_flags);
-  // printf("ID3v2 size (in bytes): %lu\n", mp3->id3_size_in_bytes);
-  printf("------------------------------------------------------------------------------\n");
-  printf("Song name: %s\n", mp3->song_title);
-  printf("Artist: %s\n", mp3->artist);
-  printf("Album: %s\n", mp3->album);
-  printf("Year: %s\n", mp3->year);
-  printf("------------------------------------------------------------------------------\n");
-}
+static void print_mp3_metadata(mp3_s *mp3) { mp3_oled_controller__player_set_playing_song(mp3); }
 
 static void print_song_list(void) {
   mp3_song_list__populate();

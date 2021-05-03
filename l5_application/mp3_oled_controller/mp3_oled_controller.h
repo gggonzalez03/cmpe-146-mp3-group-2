@@ -6,17 +6,15 @@
 #include "SSD1306_OLED.h"
 #include "SSD1306_OLED_ascii.h"
 
+#include "mp3_metadata_decoder.h"
 #include "mp3_song_list.h"
 
 typedef struct {
   size_t current_top_song_index;
   size_t current_bottom_song_index;
   size_t highlighted_song_index;
-  size_t playing_song_index;
   size_t max_lines_on_screen;
-  bool is_song_playing;
-  bool is_song_paused;
-  bool is_on_player_screen;
+  const mp3_s *mp3_playing_song;
 } mp3_oled_controller_s;
 
 /**
@@ -69,9 +67,9 @@ void mp3_oled_controller__player_show(void);
 
 /**
  * Set playing song
- * @param playing_song_index is the index of the playing song
+ * @param mp3_playing_song is the mp3 song that is playing
  **/
-void mp3_oled_controller__player_set_playing_song(size_t playing_song_index);
+void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing_song);
 
 /**
  * Set volume
