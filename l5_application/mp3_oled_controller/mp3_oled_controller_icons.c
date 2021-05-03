@@ -11,6 +11,8 @@ extern uint8_t mp3_oled_controller__oled_end_column;
 extern uint8_t mp3_oled_controller__oled_start_column_margin;
 extern uint8_t mp3_oled_controller__oled_end_column_margin;
 
+extern uint8_t mp3_oled_controller__oled_center_horizontal;
+
 /************************************************************************************
  *
  *                                PRIVATE DECLARATIONS
@@ -188,6 +190,62 @@ void mp3_oled_controller_icons__print_right_nav(bool is_on_player_screen) {
   mp3_oled_controller_icons__print_right_nav_divider();
 }
 
-void mp3_oled_controller_icons__print_play_icon(void);
-void mp3_oled_controller_icons__print_pause_icon(void);
-void mp3_oled_controller_icons__print_next_song_icon(void);
+void mp3_oled_controller_icons__print_play_icon(void) {
+  uint8_t start_page = 4;
+
+  static const uint8_t triangle_width = 7;
+  const uint8_t start_column = mp3_oled_controller__oled_center_horizontal;
+  const uint8_t end_column = start_column + triangle_width;
+
+  static uint8_t upper_triangle[7] = {0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80};
+  static uint8_t lower_triangle[7] = {0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00};
+
+  SSD1306__page_specify(start_page, start_page);
+  SSD1306__column_specify(start_column, end_column);
+  SSD1306__send_data(upper_triangle, triangle_width);
+  start_page++;
+
+  SSD1306__page_specify(start_page, start_page);
+  SSD1306__column_specify(start_column, end_column);
+  SSD1306__send_data(lower_triangle, triangle_width);
+}
+
+void mp3_oled_controller_icons__print_pause_icon(void) {
+  uint8_t start_page = 4;
+
+  static const uint8_t pause_icon_width = 8;
+  const uint8_t start_column = mp3_oled_controller__oled_center_horizontal;
+  const uint8_t end_column = start_column + pause_icon_width;
+
+  static uint8_t upper_squares[8] = {0xFE, 0xFE, 0xFE, 0x00, 0x00, 0xFE, 0xFE, 0xFE};
+  static uint8_t lower_squares[8] = {0x7F, 0x7F, 0x7F, 0x00, 0x00, 0x7F, 0x7F, 0x7F};
+
+  SSD1306__page_specify(start_page, start_page);
+  SSD1306__column_specify(start_column, end_column);
+  SSD1306__send_data(upper_squares, pause_icon_width);
+  start_page++;
+
+  SSD1306__page_specify(start_page, start_page);
+  SSD1306__column_specify(start_column, end_column);
+  SSD1306__send_data(lower_squares, pause_icon_width);
+}
+
+void mp3_oled_controller_icons__print_next_song_icon(void) {
+  // uint8_t start_page = 4;
+
+  // static const uint8_t triangle_width = 8;
+  // const uint8_t start_column = mp3_oled_controller__oled_center_horizontal;
+  // const uint8_t end_column = start_column + triangle_width;
+
+  // static uint8_t upper_triangle[8] = {0xFE, 0xFE, 0xFE, 0x00, 0x00, 0xFE, 0xFE, 0xFE};
+  // static uint8_t lower_triangle[8] = {0x7F, 0x7F, 0x7F, 0x00, 0x00, 0x7F, 0x7F, 0x7F};
+
+  // SSD1306__page_specify(start_page, start_page);
+  // SSD1306__column_specify(start_column, end_column);
+  // SSD1306__send_data(upper_triangle, triangle_width);
+  // start_page++;
+
+  // SSD1306__page_specify(start_page, start_page);
+  // SSD1306__column_specify(start_column, end_column);
+  // SSD1306__send_data(lower_triangle, triangle_width);
+}

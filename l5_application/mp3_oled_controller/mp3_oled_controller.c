@@ -13,6 +13,9 @@ const uint8_t mp3_oled_controller__oled_end_column = 0x7F;
 const uint8_t mp3_oled_controller__oled_start_column_margin = 0x0F;
 const uint8_t mp3_oled_controller__oled_end_column_margin = 0x70;
 
+const uint8_t mp3_oled_controller__oled_center_horizontal =
+    (mp3_oled_controller__oled_end_column - mp3_oled_controller__oled_start_column) / 2;
+
 static mp3_oled_controller_s mp3_oled_screen = {.current_top_song_index = 0,
                                                 .current_bottom_song_index = 7,
                                                 .highlighted_song_index = 0,
@@ -144,11 +147,6 @@ void mp3_oled_controller__song_list_scroll_down(void);
  * Show the player screen
  **/
 void mp3_oled_controller__player_show(void) {
-  uint8_t start_row = 0x00;
-  uint8_t end_row = 0x00;
-  uint8_t start_column = mp3_oled_controller__oled_start_column_margin;
-  uint8_t end_column = mp3_oled_controller__oled_end_column_margin;
-
   SSD1306__clear_screen();
   mp3_oled_controller__player_print_song_metadata();
   mp3_oled_controller_icons__print_left_nav(true);
