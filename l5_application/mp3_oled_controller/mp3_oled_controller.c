@@ -20,7 +20,9 @@ static mp3_oled_controller_s mp3_oled_screen = {.current_top_song_index = 0,
                                                 .current_bottom_song_index = 7,
                                                 .highlighted_song_index = 0,
                                                 .max_lines_on_screen = mp3_oled_controller__max_lines_on_screen,
-                                                .mp3_playing_song = NULL};
+                                                .mp3_playing_song = NULL,
+                                                .is_song_paused = true,
+                                                .volume_percentage = 70};
 
 static const uint32_t max_length = 12;
 
@@ -151,9 +153,13 @@ void mp3_oled_controller__player_show(void) {
   mp3_oled_controller__player_print_song_metadata();
   mp3_oled_controller_icons__print_left_nav(true);
 
-  mp3_oled_controller_icons__print_play_icon();
+  if (mp3_oled_screen.is_song_paused) {
+    mp3_oled_controller_icons__print_play_icon();
+  } else {
+    mp3_oled_controller_icons__print_pause_icon();
+  }
   mp3_oled_controller_icons__print_next_song_icon();
-  mp3_oled_controller_icons__print_volume_bar_icon(0);
+  mp3_oled_controller_icons__print_volume_bar_icon(mp3_oled_screen.volume_percentage);
 }
 
 /**
@@ -169,4 +175,23 @@ void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing
  * Set volume
  * @param volume is the new volume level from 0 to 100
  **/
-void mp3_oled_controller__player_set_volume(uint8_t volume);
+void mp3_oled_controller__player_set_volume(uint8_t volume) {
+  mp3_oled_screen.volume_percentage = volume;
+  mp3_oled_controller__player_show();
+}
+
+/**
+ * Show the pause icon because there is a song playing currently
+ **/
+void mp3_oled_controller__player_show_playing(void) {
+  mp3_oled_screen.is_song_paused = false;
+  mp3_oled_controller__player_show();
+}
+
+/**
+ * Show the play icon because there's no song currently playing
+ **/
+void mp3_oled_controller__player_show_paused(void) {
+  mp3_oled_screen.is_song_paused = true;
+  mp3_oled_controller__player_show();
+}

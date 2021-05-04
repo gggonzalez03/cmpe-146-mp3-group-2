@@ -15,6 +15,8 @@ typedef struct {
   size_t highlighted_song_index;
   size_t max_lines_on_screen;
   const mp3_s *mp3_playing_song;
+  bool is_song_paused;
+  uint8_t volume_percentage;
 } mp3_oled_controller_s;
 
 /**
@@ -76,3 +78,13 @@ void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing
  * @param volume is the new volume level from 0 to 100
  **/
 void mp3_oled_controller__player_set_volume(uint8_t volume);
+
+/**
+ * Show the pause icon because there is a song playing currently
+ **/
+void mp3_oled_controller__player_show_playing(void);
+
+/**
+ * Show the play icon because there's no song currently playing
+ **/
+void mp3_oled_controller__player_show_paused(void);
