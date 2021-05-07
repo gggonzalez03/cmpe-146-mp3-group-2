@@ -9,7 +9,7 @@ static gpio_s SSD1306_dcs_pin = {GPIO__PORT_1, 25};
 
 void SSD1306__configure_spi() {
 
-  const uint32_t spi_clock_mhz = 1;
+  const uint32_t spi_clock_mhz = 4;
 
   ssp1__init(spi_clock_mhz);
 
