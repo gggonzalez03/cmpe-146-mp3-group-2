@@ -219,6 +219,7 @@ void mp3_controller__play_song(size_t item_number) {
     mp3_controller__stop_song();
   }
   is_song_playing = true;
+  mp3_controller__resume_song();
 }
 
 void mp3_controller__enqueue_song(size_t item_number) {
@@ -249,6 +250,7 @@ void mp3_controller__play_enqueued_song(void) {
     mp3_controller__stop_song();
   }
   is_song_playing = true;
+  mp3_controller__resume_song();
 }
 
 void mp3_controller__go_to_player_screen(void) {
