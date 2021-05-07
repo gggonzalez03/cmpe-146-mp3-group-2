@@ -33,13 +33,25 @@ TaskHandle_t mp3_player_task_handle;
 /**********************************************************
  *                    Helper Functions
  **********************************************************/
+static void song_begin(mp3_s *mp3) {
+  mp3_controller__set_is_song_playing_flag();
 
-static void print_mp3_metadata(mp3_s *mp3) { mp3_oled_controller__player_set_playing_song(mp3); }
+  mp3_oled_controller__player_set_playing_song(mp3);
 
-static void print_song_list(void) {
-  mp3_song_list__populate();
-  for (size_t song_number = 0; song_number < mp3_song_list__get_item_count(); song_number++) {
-    printf("Song %2d: %s\n", (1 + song_number), mp3_song_list__get_name_for_item(song_number));
+  if (mp3_controller__is_on_player_screen()) {
+    mp3_oled_controller__player_show_playing();
+  } else {
+    mp3_oled_controller__player_set_playing();
+  }
+}
+
+static void song_end(void) {
+  mp3_controller__reset_flags();
+
+  if (mp3_controller__is_on_player_screen()) {
+    mp3_oled_controller__player_show_paused();
+  } else {
+    mp3_oled_controller__player_set_paused();
   }
 }
 
@@ -51,6 +63,9 @@ static void mp3_player_task(void *p);
 static void mp3_oled_screen_task(void *p);
 static void mp3_controller_task(void *p);
 
+/**********************************************************
+ * 								        Main
+ **********************************************************/
 int main(void) {
   q_songname = xQueueCreate(4, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
@@ -98,10 +113,7 @@ static void mp3_reader_task(void *p) {
     (void)f_open(&file, filename, (FA_READ));
     f_lseek(&file, start_of_audio);
 
-    print_mp3_metadata(&mp3);
-
-    // Inform the mp3 controller that the queued song is played automatically
-    mp3_controller__set_is_song_playing_flag();
+    song_begin(&mp3);
 
     while (!f_eof(&file)) {
 
@@ -115,7 +127,7 @@ static void mp3_reader_task(void *p) {
     }
     f_close(&file);
 
-    mp3_controller__reset_flags();
+    song_end();
   }
 }
 

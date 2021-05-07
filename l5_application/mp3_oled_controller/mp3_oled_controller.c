@@ -160,12 +160,22 @@ void mp3_oled_controller__player_show(void) {
 }
 
 /**
+ * Unset the is_song_paused flag
+ **/
+void mp3_oled_controller__player_set_playing(void) { mp3_oled_screen.is_song_paused = false; }
+
+/**
  * Show the pause icon because there is a song playing currently
  **/
 void mp3_oled_controller__player_show_playing(void) {
   mp3_oled_screen.is_song_paused = false;
   xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
 }
+
+/**
+ * Set the is_song_paused flag
+ **/
+void mp3_oled_controller__player_set_paused(void) { mp3_oled_screen.is_song_paused = true; }
 
 /**
  * Show the play icon because there's no song currently playing
@@ -181,14 +191,19 @@ void mp3_oled_controller__player_show_paused(void) {
  **/
 void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing_song) {
   mp3_oled_screen.mp3_playing_song = mp3_playing_song;
-  xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
 }
 
 /**
  * Set volume
  * @param volume is the new volume level from 0 to 100
  **/
-void mp3_oled_controller__player_set_volume(uint8_t volume) {
+void mp3_oled_controller__player_set_volume(uint8_t volume) { mp3_oled_screen.volume_percentage = volume; }
+
+/**
+ * Set and show volume
+ * @param volume is the new volume level from 0 to 100
+ **/
+void mp3_oled_controller__player_show_volume(uint8_t volume) {
   mp3_oled_screen.volume_percentage = volume;
   xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
 }

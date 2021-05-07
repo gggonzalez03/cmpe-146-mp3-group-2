@@ -48,9 +48,19 @@ void mp3_oled_controller__song_list_highlight_song(size_t song_index);
 void mp3_oled_controller__player_show(void);
 
 /**
+ * Unset the is_song_paused flag
+ **/
+void mp3_oled_controller__player_set_playing(void);
+
+/**
  * Show the pause icon because there is a song playing currently
  **/
 void mp3_oled_controller__player_show_playing(void);
+
+/**
+ * Set the is_song_paused flag
+ **/
+void mp3_oled_controller__player_set_paused(void);
 
 /**
  * Show the play icon because there's no song currently playing
@@ -68,6 +78,12 @@ void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing
  * @param volume is the new volume level from 0 to 100
  **/
 void mp3_oled_controller__player_set_volume(uint8_t volume);
+
+/**
+ * Set and show volume
+ * @param volume is the new volume level from 0 to 100
+ **/
+void mp3_oled_controller__player_show_volume(uint8_t volume);
 
 /**
  * Update the screen based on the current data values and flag statuses
