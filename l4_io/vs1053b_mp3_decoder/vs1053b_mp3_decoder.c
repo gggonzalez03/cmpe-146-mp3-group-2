@@ -148,9 +148,6 @@ void vs1053b__set_volume(uint8_t left, uint8_t right) {
 
   uint16_t left_and_right = ((uint16_t)non_normalized_left << 8) | (uint16_t)non_normalized_right;
 
-  while (!vs1053b__get_dreq())
-    ;
-
   // Deselect data chip select first before transmitting change volume command
   // This will solve the glitch issues when changing the volume while a song
   // is playing

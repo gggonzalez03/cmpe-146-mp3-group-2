@@ -103,7 +103,7 @@ static void mp3_controller__rotary_out_clk_falling_callback(void) {
    * TODO:
    * The debouncing problem may also be solved in hardware
    **/
-  if (new_timestamp - old_timestamp > 100) {
+  if (new_timestamp - old_timestamp > 40) {
     if (gpio__get(mp3_controller_rotary_out_dt)) {
       xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input_clockwise, NULL);
     } else {

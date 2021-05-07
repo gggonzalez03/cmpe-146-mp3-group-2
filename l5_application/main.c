@@ -98,7 +98,7 @@ static void mp3_reader_task(void *p) {
     (void)f_open(&file, filename, (FA_READ));
     f_lseek(&file, start_of_audio);
 
-    // print_mp3_metadata(&mp3);
+    print_mp3_metadata(&mp3);
 
     // Inform the mp3 controller that the queued song is played automatically
     mp3_controller__set_is_song_playing_flag();

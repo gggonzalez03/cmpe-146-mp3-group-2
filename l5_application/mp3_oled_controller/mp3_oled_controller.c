@@ -168,7 +168,6 @@ void mp3_oled_controller__player_show(void) {
  **/
 void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing_song) {
   mp3_oled_screen.mp3_playing_song = mp3_playing_song;
-  mp3_oled_controller__player_show();
 }
 
 /**
