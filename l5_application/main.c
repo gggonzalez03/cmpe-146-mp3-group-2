@@ -13,7 +13,6 @@
 #include "mp3_controller.h"
 #include "mp3_metadata_decoder.h"
 #include "mp3_oled_controller.h"
-#include "mp3_song_list.h"
 #include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
@@ -26,6 +25,7 @@ QueueHandle_t q_songname;
 static QueueHandle_t q_songdata;
 
 QueueHandle_t mp3_controller__control_inputs_queue;
+QueueHandle_t mp3_oled_controller__screen_update_queue;
 
 TaskHandle_t mp3_reader_task_handle;
 TaskHandle_t mp3_player_task_handle;
@@ -141,11 +141,14 @@ static void mp3_player_task(void *p) {
 
 static void mp3_oled_screen_task(void *p) {
 
-  mp3_song_list__populate();
+  mp3_oled_controller__screen_update_queue = xQueueCreate(10, sizeof(mp3_oled_controller__screen_update_e));
+  mp3_oled_controller__screen_update_e update_id;
+
   mp3_oled_controller__initialize();
 
   while (1) {
-    vTaskDelay(portMAX_DELAY);
+    xQueueReceive(mp3_oled_controller__screen_update_queue, (void *)&update_id, portMAX_DELAY);
+    mp3_oled_controller__update_screen(update_id);
   }
 }
 

@@ -212,10 +212,9 @@ void mp3_controller__play_song(size_t item_number) {
   xQueueSendToFront(q_songname, (void *)songname, 0);
 
   if (is_song_playing) {
-    is_break_required = true;
+    mp3_controller__stop_song();
   }
   is_song_playing = true;
-  mp3_controller__resume_song();
 }
 
 void mp3_controller__enqueue_song(size_t item_number) {
@@ -241,10 +240,9 @@ void mp3_controller__stop_song(void) {
 
 void mp3_controller__play_enqueued_song(void) {
   if (is_song_playing) {
-    is_break_required = true;
+    mp3_controller__stop_song();
   }
   is_song_playing = true;
-  mp3_controller__resume_song();
 }
 
 void mp3_controller__go_to_player_screen(void) { is_on_player_screen = true; }
@@ -340,62 +338,49 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__SHOW_SONGS:
     mp3_controller__go_to_song_list_screen();
     mp3_oled_controller__song_list_show();
-    printf("Go to song list screen\n");
     break;
   case MP3_CONTROLLER__SHOW_PLAYER:
     mp3_controller__go_to_player_screen();
     mp3_oled_controller__player_show();
-    printf("Go to player screen\n");
     break;
   case MP3_CONTROLLER__SCROLL_UP:
     mp3_controller__scroll(control);
     mp3_oled_controller__song_list_highlight_song(scroll_index);
-    printf("Scroll up: %s\n", mp3_song_list__get_name_for_item(scroll_index));
     break;
   case MP3_CONTROLLER__SCROLL_DOWN:
     mp3_controller__scroll(control);
     mp3_oled_controller__song_list_highlight_song(scroll_index);
-    printf("Scroll down: %s\n", mp3_song_list__get_name_for_item(scroll_index));
     break;
   case MP3_CONTROLLER__VOLUME_UP:
     mp3_controller__scroll(control);
     mp3_oled_controller__player_set_volume(volume_percentage);
-    printf("Volume up: %d\n", volume_percentage);
     break;
   case MP3_CONTROLLER__VOLUME_DOWN:
     mp3_controller__scroll(control);
     mp3_oled_controller__player_set_volume(volume_percentage);
-    printf("Volume down: %d\n", volume_percentage);
     break;
   case MP3_CONTROLLER__PLAY_SONG:
     mp3_controller__play_song(control->argument);
     mp3_controller__go_to_player_screen();
     mp3_oled_controller__player_show_playing();
-    printf("Play track #%d\n", control->argument + 1);
-    printf("Go to player screen\n");
     break;
   case MP3_CONTROLLER__PLAY_ENQUEUED_SONG:
     mp3_controller__play_enqueued_song();
     mp3_oled_controller__player_show_playing();
-    printf("Play enqueued track\n");
     break;
   case MP3_CONTROLLER__ENQUEUE_SONG:
     mp3_controller__enqueue_song(control->argument);
-    printf("Enqueue track #%d\n", control->argument + 1);
     break;
   case MP3_CONTROLLER__PAUSE_SONG:
     mp3_controller__pause_song();
     mp3_oled_controller__player_show_paused();
-    printf("Pause song\n");
     break;
   case MP3_CONTROLLER__RESUME_SONG:
     mp3_controller__resume_song();
     mp3_oled_controller__player_show_playing();
-    printf("Resume song\n");
     break;
   case MP3_CONTROLLER__STOP_SONG:
     mp3_controller__stop_song();
-    printf("Stop song\n");
     break;
 
   default:

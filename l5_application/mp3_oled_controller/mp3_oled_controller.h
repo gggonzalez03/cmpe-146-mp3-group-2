@@ -9,11 +9,15 @@
 #include "mp3_metadata_decoder.h"
 #include "mp3_song_list.h"
 
+typedef enum {
+  MP3_OLED_CONTROLLER_SHOW_SONG_LIST_SCREEN = 0,
+  MP3_OLED_CONTROLLER_SHOW_PLAYER_SCREEN
+} mp3_oled_controller__screen_update_e;
+
 typedef struct {
   size_t current_top_song_index;
   size_t current_bottom_song_index;
   size_t highlighted_song_index;
-  size_t max_lines_on_screen;
   const mp3_s *mp3_playing_song;
   bool is_song_paused;
   uint8_t volume_percentage;
@@ -39,33 +43,19 @@ void mp3_oled_controller__song_list_show(void);
 void mp3_oled_controller__song_list_highlight_song(size_t song_index);
 
 /**
- * Highlight next song.
- *
- * If the next song is out of the screen, automatically scroll up.
- **/
-void mp3_oled_controller__song_list_highlight_next(void);
-
-/**
- * Highlight previous song
- *
- * If the previous song is out of the screen, automatically scroll down.
- **/
-void mp3_oled_controller__song_list_highlight_previous(void);
-
-/**
- * Scroll up the song list
- **/
-void mp3_oled_controller__song_list_scroll_up(void);
-
-/**
- * Scroll down the song list
- **/
-void mp3_oled_controller__song_list_scroll_down(void);
-
-/**
  * Show the player screen
  **/
 void mp3_oled_controller__player_show(void);
+
+/**
+ * Show the pause icon because there is a song playing currently
+ **/
+void mp3_oled_controller__player_show_playing(void);
+
+/**
+ * Show the play icon because there's no song currently playing
+ **/
+void mp3_oled_controller__player_show_paused(void);
 
 /**
  * Set playing song
@@ -80,11 +70,7 @@ void mp3_oled_controller__player_set_playing_song(const mp3_s *const mp3_playing
 void mp3_oled_controller__player_set_volume(uint8_t volume);
 
 /**
- * Show the pause icon because there is a song playing currently
+ * Update the screen based on the current data values and flag statuses
+ * @param update_id is the id of the type of update to be done
  **/
-void mp3_oled_controller__player_show_playing(void);
-
-/**
- * Show the play icon because there's no song currently playing
- **/
-void mp3_oled_controller__player_show_paused(void);
+void mp3_oled_controller__update_screen(mp3_oled_controller__screen_update_e update_id);
