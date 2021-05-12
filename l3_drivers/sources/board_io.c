@@ -54,24 +54,6 @@ void board_io__initialize(void) {
   const gpio_s scl_2 = gpio__construct_with_function(GPIO__PORT_0, 11, GPIO__FUNCTION_2); // P0.11 - SCL
   gpio__enable_open_drain(sda_2);
   gpio__enable_open_drain(scl_2);
-
-  // Output pins
-  board_io__led0 = gpio__construct_as_output(GPIO__PORT_2, 3);
-  board_io__led1 = gpio__construct_as_output(GPIO__PORT_1, 26);
-  board_io__led2 = gpio__construct_as_output(GPIO__PORT_1, 24);
-  board_io__led3 = gpio__construct_as_output(GPIO__PORT_1, 18);
-
-  // Input pins
-  board_io__sw0 = gpio__construct_as_input(GPIO__PORT_1, 19);
-  board_io__sw1 = gpio__construct_as_input(GPIO__PORT_1, 15);
-  board_io__sw2 = gpio__construct_as_input(GPIO__PORT_0, 30);
-  board_io__sw3 = gpio__construct_as_input(GPIO__PORT_0, 29);
-
-  // SW0 and SW1 require internal pull down resistors
-  // otherwise undefined behavior will result from
-  // floating pins on open switch
-  gpio__enable_pull_down_resistors(board_io__sw0);
-  gpio__enable_pull_down_resistors(board_io__sw1);
 }
 
 // Note: Not using gpio.h API here to optimize the speed of SSP CS selection

@@ -16,7 +16,6 @@ static void peripherals_init__i2c_init(void);
 
 void peripherals_init(void) {
   board_io__initialize();
-  peripherals_init__startup_sequence();
 
   // UART initialization is required in order to use <stdio.h> puts, printf() etc; @see system_calls.c
   peripherals_init__uart0_init();

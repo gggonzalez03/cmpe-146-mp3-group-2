@@ -9,13 +9,10 @@
 #include "lpc40xx.h"
 #include "sj2_cli.h"
 
-#include "SSD1306_OLED.h"
-#include "SSD1306_OLED_ascii.h"
-
 #include "ff.h"
 #include "mp3_controller.h"
 #include "mp3_metadata_decoder.h"
-#include "mp3_song_list.h"
+#include "mp3_oled_controller.h"
 #include "vs1053b_mp3_decoder.h"
 
 /**********************************************************
@@ -28,6 +25,7 @@ QueueHandle_t q_songname;
 static QueueHandle_t q_songdata;
 
 QueueHandle_t mp3_controller__control_inputs_queue;
+QueueHandle_t mp3_oled_controller__screen_update_queue;
 
 TaskHandle_t mp3_reader_task_handle;
 TaskHandle_t mp3_player_task_handle;
@@ -35,24 +33,25 @@ TaskHandle_t mp3_player_task_handle;
 /**********************************************************
  *                    Helper Functions
  **********************************************************/
+static void song_begin(mp3_s *mp3) {
+  mp3_controller__set_is_song_playing_flag();
 
-static void print_mp3_metadata(mp3_s *mp3) {
-  // printf("File Identifier: %s\n", mp3->tag);
-  // printf("ID3v2 version: %d, revision: %d\n", mp3->id3_version[0], mp3->id3_version[1]);
-  // printf("ID3v2 flags: %d\n", mp3->id3_flags);
-  // printf("ID3v2 size (in bytes): %lu\n", mp3->id3_size_in_bytes);
-  printf("------------------------------------------------------------------------------\n");
-  printf("Song name: %s\n", mp3->song_title);
-  printf("Artist: %s\n", mp3->artist);
-  printf("Album: %s\n", mp3->album);
-  printf("Year: %s\n", mp3->year);
-  printf("------------------------------------------------------------------------------\n");
+  mp3_oled_controller__player_set_playing_song(mp3);
+
+  if (mp3_controller__is_on_player_screen()) {
+    mp3_oled_controller__player_show_playing();
+  } else {
+    mp3_oled_controller__player_set_playing();
+  }
 }
 
-static void print_song_list(void) {
-  mp3_song_list__populate();
-  for (size_t song_number = 0; song_number < mp3_song_list__get_item_count(); song_number++) {
-    printf("Song %2d: %s\n", (1 + song_number), mp3_song_list__get_name_for_item(song_number));
+static void song_end(void) {
+  mp3_controller__reset_flags();
+
+  if (mp3_controller__is_on_player_screen()) {
+    mp3_oled_controller__player_show_paused();
+  } else {
+    mp3_oled_controller__player_set_paused();
   }
 }
 
@@ -64,6 +63,9 @@ static void mp3_player_task(void *p);
 static void mp3_oled_screen_task(void *p);
 static void mp3_controller_task(void *p);
 
+/**********************************************************
+ * 								        Main
+ **********************************************************/
 int main(void) {
   q_songname = xQueueCreate(4, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
@@ -111,10 +113,7 @@ static void mp3_reader_task(void *p) {
     (void)f_open(&file, filename, (FA_READ));
     f_lseek(&file, start_of_audio);
 
-    print_mp3_metadata(&mp3);
-
-    // Inform the mp3 controller that the queued song is played automatically
-    mp3_controller__set_is_song_playing_flag();
+    song_begin(&mp3);
 
     while (!f_eof(&file)) {
 
@@ -128,7 +127,7 @@ static void mp3_reader_task(void *p) {
     }
     f_close(&file);
 
-    mp3_controller__reset_flags();
+    song_end();
   }
 }
 
@@ -154,15 +153,14 @@ static void mp3_player_task(void *p) {
 
 static void mp3_oled_screen_task(void *p) {
 
-  print_song_list();
+  mp3_oled_controller__screen_update_queue = xQueueCreate(10, sizeof(mp3_oled_controller__screen_update_e));
+  mp3_oled_controller__screen_update_e update_id;
 
-  SSD1306__initialize();
-  SSD1306_ascii_display_string("Hello World");
+  mp3_oled_controller__initialize();
 
-  // fade command//
-  // SSD1306__fadeout_on();
   while (1) {
-    vTaskDelay(portMAX_DELAY);
+    xQueueReceive(mp3_oled_controller__screen_update_queue, (void *)&update_id, portMAX_DELAY);
+    mp3_oled_controller__update_screen(update_id);
   }
 }
 
