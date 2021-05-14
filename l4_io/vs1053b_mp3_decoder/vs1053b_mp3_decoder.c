@@ -155,3 +155,12 @@ void vs1053b__set_volume(uint8_t left, uint8_t right) {
   vs1053b__sci_write(volume_command, left_and_right);
   vs1053b__dcs(); // Reselect data chip select, continue playing song
 }
+
+void vs1053b__set_treble_bass(uint8_t treble, uint8_t bass) {
+  uint8_t treble_bass_command = 0x02;
+  uint16_t amplitude = ((uint16_t)treble << 12) | ((uint16_t)bass << 4);
+
+  vs1053b__dds();
+  vs1053b__sci_write(treble_bass_command, amplitude);
+  vs1053b__dcs();
+}
