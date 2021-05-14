@@ -69,6 +69,10 @@ void SSD1306__display_initialize(void) {
   uint8_t set_memory_address_mode[2] = {0x20, 0x00};
   uint8_t entire_display_onoff[1] = {0xA4};
 
+  SSD1306__rst_low();
+  SSD1306__delay_ms(100);
+  SSD1306__rst_high();
+
   SSD1306__send_command(display_off, 1);
   SSD1306__send_command(display_clock_frequency, 2);
   SSD1306__send_command(multiplex_ratio, 2);

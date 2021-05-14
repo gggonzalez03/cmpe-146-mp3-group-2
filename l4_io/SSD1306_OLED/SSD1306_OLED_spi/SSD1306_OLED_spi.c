@@ -3,9 +3,11 @@
 #include "gpio.h"
 #include "ssp1.h"
 
-static gpio_s SSD1306_cs_pin = {GPIO__PORT_1, 22};
+static gpio_s SSD1306_rst_pin = {GPIO__PORT_1, 23};
 
-static gpio_s SSD1306_dcs_pin = {GPIO__PORT_1, 25};
+static gpio_s SSD1306_cs_pin = {GPIO__PORT_1, 14};
+
+static gpio_s SSD1306_dcs_pin = {GPIO__PORT_4, 29};
 
 void SSD1306__configure_spi() {
 
@@ -20,13 +22,17 @@ void SSD1306__configure_spi() {
   gpio__set_function(SSD1306_cs_pin, GPIO__FUNCITON_0_IO_PIN);
   gpio__set_function(SSD1306_dcs_pin, GPIO__FUNCITON_0_IO_PIN);
 
+  gpio__set_as_output(SSD1306_rst_pin);
   gpio__set_as_output(SSD1306_cs_pin);
   gpio__set_as_output(SSD1306_dcs_pin);
 
+  gpio__set(SSD1306_rst_pin);
   gpio__set(SSD1306_cs_pin);
   gpio__set(SSD1306_dcs_pin);
 }
 
+void SSD1306__rst_high() { gpio__set(SSD1306_rst_pin); }
+void SSD1306__rst_low() { gpio__reset(SSD1306_rst_pin); }
 void SSD1306__cs() { gpio__reset(SSD1306_cs_pin); }
 void SSD1306__ds() { gpio__set(SSD1306_cs_pin); }
 void SSD1306__data_ds() { gpio__reset(SSD1306_dcs_pin); } // write command

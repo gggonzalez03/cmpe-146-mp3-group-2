@@ -15,6 +15,8 @@ void SSD1306__configure_spi();
 void SSD1306__cs();
 void SSD1306__ds(); // chip deselect
 
+void SSD1306__rst_high();
+void SSD1306__rst_low();
 /**
  * Chip select the OLED display for Serial Data Interfacing
  * This means that only data bytes are transfered. They go straight
