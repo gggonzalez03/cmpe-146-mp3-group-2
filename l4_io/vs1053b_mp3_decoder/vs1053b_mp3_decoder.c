@@ -1,5 +1,6 @@
 #include "vs1053b_mp3_decoder.h"
 #include "vs1053b_mp3_decoder_spi.h"
+#include <stdio.h>
 
 bool vs1053b__mp3_decoder_initialize(void) {
   vs1053b__configure_spi(1);
