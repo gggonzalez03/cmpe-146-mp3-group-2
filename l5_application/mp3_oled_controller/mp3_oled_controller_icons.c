@@ -301,3 +301,75 @@ void mp3_oled_controller_icons__print_volume_bar_icon(uint8_t level) {
   SSD1306__data_ds();
   SSD1306__ds();
 }
+
+void mp3_oled_controller_icons__print_treble_bar_icon(int treb_level) {
+  uint8_t treble_index = 0;
+
+  static uint8_t treble_bar[4] = {0x40, 0x50, 0x54, 0x55};
+
+  SSD1306__column_specify(0x75, 0x7F);
+  SSD1306__page_specify(0x03, 0x03);
+  SSD1306_ascii_display_T(false);
+
+  SSD1306__page_specify(0x02, 0x02);
+
+  for (int index = 1; index < treb_level + 1; index++) {
+
+    if (index == 5) {
+      SSD1306__page_specify(0x01, 0x01);
+      treble_index = 0;
+
+    } else if (index == 9) {
+      SSD1306__page_specify(0x00, 0x00);
+      treble_index = 0;
+    } else {
+      ;
+    }
+    SSD1306__column_specify(0x76, 0x7F);
+    SSD1306__cs();
+    SSD1306__data_cs();
+    SSD1306__transmit_byte(treble_bar[treble_index]);
+    SSD1306__transmit_byte(treble_bar[treble_index]);
+    SSD1306__transmit_byte(treble_bar[treble_index]);
+    SSD1306__transmit_byte(treble_bar[treble_index]);
+    SSD1306__data_ds();
+    SSD1306__ds();
+    treble_index++;
+  }
+}
+
+void mp3_oled_controller_icons__print_bass_bar_icon(int bass_level) {
+  uint8_t bass_index = 0;
+
+  static uint8_t bass_bar[4] = {0x40, 0x50, 0x54, 0x55};
+
+  SSD1306__column_specify(0x75, 0x7F);
+  SSD1306__page_specify(0x07, 0x07);
+  SSD1306_ascii_display_B(false);
+
+  SSD1306__page_specify(0x06, 0x06);
+
+  for (int index = 1; index < bass_level + 1; index++) {
+
+    if (index == 5) {
+      SSD1306__page_specify(0x05, 0x05);
+      bass_index = 0;
+
+    } else if (index == 9) {
+      SSD1306__page_specify(0x04, 0x04);
+      bass_index = 0;
+    } else {
+      ;
+    }
+    SSD1306__column_specify(0x76, 0x7F);
+    SSD1306__cs();
+    SSD1306__data_cs();
+    SSD1306__transmit_byte(bass_bar[bass_index]);
+    SSD1306__transmit_byte(bass_bar[bass_index]);
+    SSD1306__transmit_byte(bass_bar[bass_index]);
+    SSD1306__transmit_byte(bass_bar[bass_index]);
+    SSD1306__data_ds();
+    SSD1306__ds();
+    bass_index++;
+  }
+}
