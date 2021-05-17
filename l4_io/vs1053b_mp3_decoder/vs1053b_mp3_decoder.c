@@ -159,7 +159,15 @@ void vs1053b__set_volume(uint8_t left, uint8_t right) {
   vs1053b__dcs(); // Reselect data chip select, continue playing song
 }
 
-void vs1053b__set_treble_amplitude(uint8_t treble_amp) {
+void vs1053b__set_treble_amplitude(int8_t treble_amp) {
+
+  if (treble_amp <= -8) {
+    treble_amp = -8;
+  }
+  if (treble_amp > 7) {
+    treble_amp = 7;
+  }
+
   uint8_t treble_bass_command = 0x02;
 
   vs1053b__treble_bass &= ~(0xF000);
@@ -172,8 +180,11 @@ void vs1053b__set_treble_amplitude(uint8_t treble_amp) {
 
 void vs1053b__set_treble_frequency(uint8_t treble_freq) {
 
-  if (treble_freq == 0) {
+  if (treble_freq < 1) {
     treble_freq = 1;
+  }
+  if (treble_freq > 15) {
+    treble_freq = 15;
   }
 
   uint8_t treble_bass_command = 0x02;
@@ -187,6 +198,14 @@ void vs1053b__set_treble_frequency(uint8_t treble_freq) {
 }
 
 void vs1053b__set_bass_amplitude(uint8_t bass_amp) {
+
+  if (bass_amp < 0) {
+    bass_amp = 0;
+  }
+  if (bass_amp > 15) {
+    bass_amp = 15;
+  }
+
   uint8_t treble_bass_command = 0x02;
 
   vs1053b__treble_bass &= ~(0x00F0);
@@ -199,8 +218,11 @@ void vs1053b__set_bass_amplitude(uint8_t bass_amp) {
 
 void vs1053b__set_bass_frequency(uint8_t bass_freq) {
 
-  if (bass_freq == 0) {
+  if (bass_freq < 2) {
     bass_freq = 2;
+  }
+  if (bass_freq > 15) {
+    bass_freq = 15;
   }
 
   uint8_t treble_bass_command = 0x02;

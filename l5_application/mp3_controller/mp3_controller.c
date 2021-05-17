@@ -1,5 +1,4 @@
 #include <stddef.h>
-#include <stdio.h>
 
 #include "mp3_controller.h"
 #include "mp3_oled_controller.h"
@@ -9,6 +8,7 @@
 #include "gpio.h"
 #include "gpio_isr.h"
 #include "lpc_peripherals.h"
+#include "mp3_controller_acc.h"
 #include "sys_time.h"
 #include "vs1053b_mp3_decoder.h"
 
@@ -56,10 +56,9 @@ static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
 static const mp3_controller_s scroll_down = {MP3_CONTROLLER__SCROLL_DOWN, 0};
 static const mp3_controller_s volume_up = {MP3_CONTROLLER__VOLUME_UP, 0};
 static const mp3_controller_s volume_down = {MP3_CONTROLLER__VOLUME_DOWN, 0};
-static const mp3_controller_s treble_up = {MP3_CONTROLLER__TREBLE_UP, 0};
-static const mp3_controller_s treble_down = {MP3_CONTROLLER__TREBLE_DOWN, 0};
-static const mp3_controller_s bass_up = {MP3_CONTROLLER__BASS_UP, 0};
-static const mp3_controller_s bass_down = {MP3_CONTROLLER__BASS_DOWN, 0};
+static const mp3_controller_s set_treble = {MP3_CONTROLLER__SET_TREBLE, 0};
+static const mp3_controller_s set_bass = {MP3_CONTROLLER__SET_BASS, 0};
+static const mp3_controller_s clear_treble_bass = {MP3_CONTROLLER__CLEAR_TREBLE_BASS, 0};
 
 static const mp3_controller_s play_song = {MP3_CONTROLLER__PLAY_SONG, 0};
 static const mp3_controller_s enqueue_song = {MP3_CONTROLLER__ENQUEUE_SONG, 0};
@@ -172,14 +171,13 @@ static mp3_controller_s mp3_controller__get_control_from_orientation() {
     switch (acceleration__get_orientation()) {
     case MP3__ORIENTATION_UP:
       /* init treble increase */
-      fprintf(stderr, "UP \n");
+      control = set_treble;
       break;
     case MP3__ORIENTATION_DOWN:
       /* init bass increase */
-      fprintf(stderr, "DOWN \n");
+      control = set_bass;
       break;
     case MP3__ORIENTATION_RIGHT:
-      fprintf(stderr, "RIGHT \n");
       if (xQueuePeek(q_songname, songname, 0) == pdTRUE) {
         control = play_enqueued_song;
       }
@@ -189,17 +187,15 @@ static mp3_controller_s mp3_controller__get_control_from_orientation() {
       if (xQueuePeek(q_songname_previous, songname, 0) == pdTRUE) {
         control = play_previous_song;
       }
-      fprintf(stderr, "LEFT \n");
       break;
     case MP3__ORIENTATION_FRONT:
       /* treble and bass back to normal. */
-      fprintf(stderr, "FRONT \n");
+      control = clear_treble_bass;
       break;
     case MP3__ORIENTATION_BACK:
       /* pause song */
       control = pause_song;
       control.argument = scroll_index;
-      fprintf(stderr, "BACK \n");
       break;
 
     default:
@@ -479,22 +475,16 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__STOP_SONG:
     mp3_controller__stop_song();
     break;
-    // case MP3_CONTROLLER__ORIENTATION_UP:
-    //   /**
-    //    * TODO: Increase treble
-    //    **/
-    //   break;
-    // case MP3_CONTROLLER__ORIENTATION_DOWN:
-    //   /**
-    //    * TODO: Increase bass
-    //    **/
-    //   break;
-    // case MP3_CONTROLLER__ORIENTATION_RIGHT:
-    //   mp3_controller__play_enqueued_song();
-    //   break;
-    // case MP3_CONTROLLER__ORIENTATION_LEFT:
-    //   mp3_controller__play_previous_song();
-    //   break;
+  case MP3_CONTROLLER__SET_TREBLE:
+    mp3_controller_acc__resume_treble_task();
+    break;
+  case MP3_CONTROLLER__SET_BASS:
+    mp3_controller_acc__resume_bass_task();
+    break;
+  case MP3_CONTROLLER__CLEAR_TREBLE_BASS:
+    mp3_controller_acc__suspend_treble_task();
+    mp3_controller_acc__suspend_bass_task();
+    break;
 
   default:
     break;

@@ -11,6 +11,7 @@
 
 #include "ff.h"
 #include "mp3_controller.h"
+#include "mp3_controller_acc.h"
 #include "mp3_metadata_decoder.h"
 #include "mp3_oled_controller.h"
 #include "vs1053b_mp3_decoder.h"
@@ -78,6 +79,8 @@ int main(void) {
               &mp3_player_task_handle);
   xTaskCreate(mp3_oled_screen_task, "mp3_oled_screen_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
   xTaskCreate(mp3_controller_task, "mp3_controller_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM, NULL);
+
+  mp3_controller_acc__create_all_tasks();
 
   sj2_cli__init();
   vTaskStartScheduler();

@@ -75,7 +75,7 @@ void vs1053b__set_volume(uint8_t left, uint8_t right);
  * Set treble amplitude
  * @param treble_amp is to control amplitude of treble. ONLY first 0:3 bits valid
  **/
-void vs1053b__set_treble_amplitude(uint8_t treble_amp);
+void vs1053b__set_treble_amplitude(int8_t treble_amp);
 
 /**
  * Set treble frequency
