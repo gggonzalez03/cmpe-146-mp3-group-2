@@ -22,6 +22,7 @@ typedef char songname_t[32];
 typedef char file_buffer_t[512];
 
 QueueHandle_t q_songname;
+QueueHandle_t q_songname_previous;
 static QueueHandle_t q_songdata;
 
 QueueHandle_t mp3_controller__control_inputs_queue;
@@ -67,7 +68,8 @@ static void mp3_controller_task(void *p);
  * 								        Main
  **********************************************************/
 int main(void) {
-  q_songname = xQueueCreate(4, sizeof(songname_t));
+  q_songname = xQueueCreate(10, sizeof(songname_t));
+  q_songname_previous = xQueueCreate(10, sizeof(songname_t));
   q_songdata = xQueueCreate(2, sizeof(file_buffer_t));
 
   xTaskCreate(mp3_reader_task, "mp3_reader_task", 4096 / sizeof(void *), NULL, PRIORITY_MEDIUM,
@@ -86,7 +88,7 @@ int main(void) {
  **********************************************************/
 static void mp3_reader_task(void *p) {
 
-  char filename[32];
+  songname_t filename;
   file_buffer_t buffer;
   UINT bytes_read;
 
@@ -126,6 +128,10 @@ static void mp3_reader_task(void *p) {
       xQueueSend(q_songdata, (void *)buffer, portMAX_DELAY);
     }
     f_close(&file);
+
+    if (!mp3_controller__is_break_required()) {
+      xQueueSendToFront(q_songname_previous, (void *)filename, 0);
+    }
 
     song_end();
   }

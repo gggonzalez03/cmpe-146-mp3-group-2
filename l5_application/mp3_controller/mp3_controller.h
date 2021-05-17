@@ -26,6 +26,7 @@ typedef enum {
   MP3_CONTROLLER__BASS_DOWN,
   MP3_CONTROLLER__PLAY_SONG,
   MP3_CONTROLLER__PLAY_ENQUEUED_SONG,
+  MP3_CONTROLLER__PLAY_PREVIOUS_SONG,
   MP3_CONTROLLER__ENQUEUE_SONG,
   MP3_CONTROLLER__PAUSE_SONG,
   MP3_CONTROLLER__RESUME_SONG,
@@ -50,6 +51,7 @@ void mp3_controller__pause_song(void);
 void mp3_controller__resume_song(void);
 void mp3_controller__stop_song(void);
 void mp3_controller__play_enqueued_song(void);
+void mp3_controller__play_previous_song(void);
 void mp3_controller__go_to_player_screen(void);
 void mp3_controller__go_to_song_list_screen(void);
 void mp3_controller__reset_flags(void);

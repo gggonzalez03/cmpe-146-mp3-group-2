@@ -27,6 +27,7 @@
 #define MP3__ORIENTATION_BACK ACC__ORIENTATION_BACK
 
 extern QueueHandle_t q_songname;
+extern QueueHandle_t q_songname_previous;
 extern QueueHandle_t mp3_controller__control_inputs_queue;
 
 extern TaskHandle_t mp3_reader_task_handle;
@@ -37,6 +38,8 @@ extern TaskHandle_t mp3_player_task_handle;
  *                                PRIVATE DECLARATIONS
  *
  ***********************************************************************************/
+typedef char songname_t[32];
+
 static const gpio_s mp3_controller_show_songs_button = {GPIO__PORT_0, 29};
 static const gpio_s mp3_controller_show_player_button = {GPIO__PORT_0, 30};
 static const gpio_s mp3_controller_rotary_out_clk = {GPIO__PORT_2, 5};
@@ -48,6 +51,7 @@ static const gpio_s mp3_controller_accel_interrupt_2 = {GPIO__PORT_0, 25};
 static const mp3_controller_s show_songs = {MP3_CONTROLLER__SHOW_SONGS, 0};
 static const mp3_controller_s show_player = {MP3_CONTROLLER__SHOW_PLAYER, 0};
 static const mp3_controller_s play_enqueued_song = {MP3_CONTROLLER__PLAY_ENQUEUED_SONG, 0};
+static const mp3_controller_s play_previous_song = {MP3_CONTROLLER__PLAY_PREVIOUS_SONG, 0};
 static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
 static const mp3_controller_s scroll_down = {MP3_CONTROLLER__SCROLL_DOWN, 0};
 static const mp3_controller_s volume_up = {MP3_CONTROLLER__VOLUME_UP, 0};
@@ -162,6 +166,8 @@ static mp3_controller_s mp3_controller__get_control_from_orientation() {
 
   mp3_controller_s control;
 
+  songname_t songname;
+
   if (acceleration__get_interrupt_source() == ACC__SRC_LNDPRT) {
     switch (acceleration__get_orientation()) {
     case MP3__ORIENTATION_UP:
@@ -174,10 +180,15 @@ static mp3_controller_s mp3_controller__get_control_from_orientation() {
       break;
     case MP3__ORIENTATION_RIGHT:
       fprintf(stderr, "RIGHT \n");
-      control = play_enqueued_song;
+      if (xQueuePeek(q_songname, songname, 0) == pdTRUE) {
+        control = play_enqueued_song;
+      }
       break;
     case MP3__ORIENTATION_LEFT:
       /* previous song */
+      if (xQueuePeek(q_songname_previous, songname, 0) == pdTRUE) {
+        control = play_previous_song;
+      }
       fprintf(stderr, "LEFT \n");
       break;
     case MP3__ORIENTATION_FRONT:
@@ -322,6 +333,20 @@ void mp3_controller__play_enqueued_song(void) {
   mp3_controller__resume_song();
 }
 
+void mp3_controller__play_previous_song(void) {
+  songname_t songname;
+
+  if (xQueueReceive(q_songname_previous, (void *)songname, 0)) {
+    xQueueSendToFront(q_songname, (void *)songname, 0);
+
+    if (is_song_playing) {
+      mp3_controller__stop_song();
+    }
+    is_song_playing = true;
+    mp3_controller__resume_song();
+  }
+}
+
 void mp3_controller__go_to_player_screen(void) {
   is_on_player_screen = true;
   mp3_oled_controller__player_show();
@@ -392,7 +417,7 @@ mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__contr
     break;
   case MP3_CONTROLLER__RIGHT_BUTTON:
     if (is_on_player_screen) {
-      if (xQueuePeekFromISR(q_songname, &songname) == pdTRUE) {
+      if (xQueuePeek(q_songname, songname, 0) == pdTRUE) {
         control = play_enqueued_song;
       }
     } else {
@@ -442,6 +467,9 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__ENQUEUE_SONG:
     mp3_controller__enqueue_song(control->argument);
     break;
+  case MP3_CONTROLLER__PLAY_PREVIOUS_SONG:
+    mp3_controller__play_previous_song();
+    break;
   case MP3_CONTROLLER__PAUSE_SONG:
     mp3_controller__pause_song();
     break;
@@ -451,24 +479,22 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__STOP_SONG:
     mp3_controller__stop_song();
     break;
-  case MP3_CONTROLLER__ORIENTATION_UP:
-    /**
-     * TODO: Increase treble
-     **/
-    break;
-  case MP3_CONTROLLER__ORIENTATION_DOWN:
-    /**
-     * TODO: Increase bass
-     **/
-    break;
-  case MP3_CONTROLLER__ORIENTATION_RIGHT:
-    mp3_controller__play_enqueued_song();
-    break;
-  case MP3_CONTROLLER__ORIENTATION_LEFT:
-    /**
-     * TODO: Play previous song
-     **/
-    break;
+    // case MP3_CONTROLLER__ORIENTATION_UP:
+    //   /**
+    //    * TODO: Increase treble
+    //    **/
+    //   break;
+    // case MP3_CONTROLLER__ORIENTATION_DOWN:
+    //   /**
+    //    * TODO: Increase bass
+    //    **/
+    //   break;
+    // case MP3_CONTROLLER__ORIENTATION_RIGHT:
+    //   mp3_controller__play_enqueued_song();
+    //   break;
+    // case MP3_CONTROLLER__ORIENTATION_LEFT:
+    //   mp3_controller__play_previous_song();
+    //   break;
 
   default:
     break;
