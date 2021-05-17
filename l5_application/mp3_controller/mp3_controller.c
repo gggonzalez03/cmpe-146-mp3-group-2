@@ -5,6 +5,7 @@
 #include "mp3_oled_controller.h"
 #include "mp3_song_list.h"
 
+#include "acceleration.h"
 #include "gpio.h"
 #include "gpio_isr.h"
 #include "lpc_peripherals.h"
@@ -15,6 +16,15 @@
 #include "queue.h"
 #include "semphr.h"
 #include "task.h"
+
+// accelerometer orientation is different from the actual orientation
+// of the mp3. This is the mapping
+#define MP3__ORIENTATION_UP ACC__ORIENTATION_LEFT
+#define MP3__ORIENTATION_DOWN ACC__ORIENTATION_RIGHT
+#define MP3__ORIENTATION_RIGHT ACC__ORIENTATION_DOWN
+#define MP3__ORIENTATION_LEFT ACC__ORIENTATION_UP
+#define MP3__ORIENTATION_FRONT ACC__ORIENTATION_FRONT
+#define MP3__ORIENTATION_BACK ACC__ORIENTATION_BACK
 
 extern QueueHandle_t q_songname;
 extern QueueHandle_t mp3_controller__control_inputs_queue;
@@ -42,6 +52,10 @@ static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
 static const mp3_controller_s scroll_down = {MP3_CONTROLLER__SCROLL_DOWN, 0};
 static const mp3_controller_s volume_up = {MP3_CONTROLLER__VOLUME_UP, 0};
 static const mp3_controller_s volume_down = {MP3_CONTROLLER__VOLUME_DOWN, 0};
+static const mp3_controller_s treble_up = {MP3_CONTROLLER__TREBLE_UP, 0};
+static const mp3_controller_s treble_down = {MP3_CONTROLLER__TREBLE_DOWN, 0};
+static const mp3_controller_s bass_up = {MP3_CONTROLLER__BASS_UP, 0};
+static const mp3_controller_s bass_down = {MP3_CONTROLLER__BASS_DOWN, 0};
 
 static const mp3_controller_s play_song = {MP3_CONTROLLER__PLAY_SONG, 0};
 static const mp3_controller_s enqueue_song = {MP3_CONTROLLER__ENQUEUE_SONG, 0};
@@ -128,9 +142,62 @@ static void mp3_controller__rotary_sw_callback(void) {
   old_timestamp = new_timestamp;
 }
 
-static void mp3_controller__pause_song_accel_callback(void) {}
+static void mp3_controller__accel_interrupt_1_callback(void) {
+  static const mp3_controller__control_input_source_e input = MP3_CONTROLLER__ACCELEROMETER_INT1;
+  xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
+}
 
-static void mp3_controller__resume_song_accel_callback(void) {}
+static void mp3_controller__accel_interrupt_2_callback(void) {
+  static const mp3_controller__control_input_source_e input = MP3_CONTROLLER__ACCELEROMETER_INT2;
+  xQueueSendFromISR(mp3_controller__control_inputs_queue, (void *)&input, NULL);
+}
+
+static void mp3_controller__initialize_accelerometer() {
+  acceleration__init();
+  acceleration__enable_orientation_interrupts();
+  acceleration__set_orientation_debounce_counter(10);
+}
+
+static mp3_controller_s mp3_controller__get_control_from_orientation() {
+
+  mp3_controller_s control;
+
+  if (acceleration__get_interrupt_source() == ACC__SRC_LNDPRT) {
+    switch (acceleration__get_orientation()) {
+    case MP3__ORIENTATION_UP:
+      /* init treble increase */
+      fprintf(stderr, "UP \n");
+      break;
+    case MP3__ORIENTATION_DOWN:
+      /* init bass increase */
+      fprintf(stderr, "DOWN \n");
+      break;
+    case MP3__ORIENTATION_RIGHT:
+      fprintf(stderr, "RIGHT \n");
+      control = play_enqueued_song;
+      break;
+    case MP3__ORIENTATION_LEFT:
+      /* previous song */
+      fprintf(stderr, "LEFT \n");
+      break;
+    case MP3__ORIENTATION_FRONT:
+      /* treble and bass back to normal. */
+      fprintf(stderr, "FRONT \n");
+      break;
+    case MP3__ORIENTATION_BACK:
+      /* pause song */
+      control = pause_song;
+      control.argument = scroll_index;
+      fprintf(stderr, "BACK \n");
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  return control;
+}
 
 /************************************************************************************
  *
@@ -148,8 +215,8 @@ void mp3_controller__initialize(void) {
 
   function_pointer_t callback_functions_rising[RISING_CONTROLS_COUNT] = {
       mp3_controller__show_songs_button_callback, mp3_controller__show_player_button_callback,
-      mp3_controller__rotary_sw_callback, mp3_controller__pause_song_accel_callback,
-      mp3_controller__resume_song_accel_callback};
+      mp3_controller__rotary_sw_callback, mp3_controller__accel_interrupt_1_callback,
+      mp3_controller__accel_interrupt_2_callback};
 
   function_pointer_t callback_functions_falling[FALLING_CONTROLS_COUNT] = {
       mp3_controller__rotary_out_clk_falling_callback};
@@ -165,6 +232,8 @@ void mp3_controller__initialize(void) {
     gpiox__attach_interrupt(mp3_controls_falling[i].port_number, mp3_controls_falling[i].pin_number,
                             GPIO_INTR__FALLING_EDGE, callback_functions_falling[i]);
   }
+
+  mp3_controller__initialize_accelerometer();
 
   lpc_peripheral__enable_interrupt(LPC_PERIPHERAL__GPIO, gpiox__interrupt_dispatcher, NULL);
 }
@@ -333,6 +402,7 @@ mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__contr
   case MP3_CONTROLLER__ACCELEROMETER_INT1:
     break;
   case MP3_CONTROLLER__ACCELEROMETER_INT2:
+    control = mp3_controller__get_control_from_orientation();
     break;
 
   default:
@@ -380,6 +450,24 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__STOP_SONG:
     mp3_controller__stop_song();
+    break;
+  case MP3_CONTROLLER__ORIENTATION_UP:
+    /**
+     * TODO: Increase treble
+     **/
+    break;
+  case MP3_CONTROLLER__ORIENTATION_DOWN:
+    /**
+     * TODO: Increase bass
+     **/
+    break;
+  case MP3_CONTROLLER__ORIENTATION_RIGHT:
+    mp3_controller__play_enqueued_song();
+    break;
+  case MP3_CONTROLLER__ORIENTATION_LEFT:
+    /**
+     * TODO: Play previous song
+     **/
     break;
 
   default:

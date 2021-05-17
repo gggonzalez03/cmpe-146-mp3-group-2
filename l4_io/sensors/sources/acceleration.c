@@ -94,16 +94,27 @@ float acceleration__get_acceleration_z(void) {
 }
 
 void acceleration__enable_orientation_interrupts(void) {
+  uint8_t ctrl_reg_3 = 0x2C;
   uint8_t ctrl_reg_4 = 0x2D;
   uint8_t orientation_cfg_reg = 0x11;
   uint8_t orientation_interrupt_en = 1 << 4;
-  uint8_t orientation_detection_en = 1 << 6;
+  uint8_t orientation_interrupt_active_high = 1 << 1;
+  uint8_t orientation_detection_en = 3 << 6;
 
   acceleration__deactivate();
 
+  i2c__write_single(acceleration__sensor_bus, acceleration__address, ctrl_reg_3, orientation_interrupt_active_high);
   i2c__write_single(acceleration__sensor_bus, acceleration__address, ctrl_reg_4, orientation_interrupt_en);
   i2c__write_single(acceleration__sensor_bus, acceleration__address, orientation_cfg_reg, orientation_detection_en);
 
+  acceleration__activate();
+}
+
+void acceleration__set_orientation_debounce_counter(uint8_t count) {
+  uint8_t debounce_counter_reg = 0x12;
+
+  acceleration__deactivate();
+  i2c__write_single(acceleration__sensor_bus, acceleration__address, debounce_counter_reg, count);
   acceleration__activate();
 }
 
@@ -111,11 +122,7 @@ acceleration__interrupt_source_e acceleration__get_interrupt_source(void) {
   uint8_t int_source_reg = 0x0C;
   uint8_t int_source;
 
-  acceleration__deactivate();
-
   i2c__read_slave_data(acceleration__sensor_bus, acceleration__address, int_source_reg, &int_source, 1);
-
-  acceleration__activate();
 
   return int_source;
 }
@@ -123,13 +130,16 @@ acceleration__interrupt_source_e acceleration__get_interrupt_source(void) {
 acceleration__orientation_e acceleration__get_orientation(void) {
   uint8_t orientation_status_reg_val = acceleration__get_orientation_status_reg();
 
-  uint8_t landscape_or_portrait = orientation_status_reg_val & (3UL << 2);
+  uint8_t landscape_or_portrait = orientation_status_reg_val & (3UL << 1);
   uint8_t back_or_front = orientation_status_reg_val & (1UL << 0);
+  uint8_t z_tilt = orientation_status_reg_val & (1UL << 6);
 
   acceleration__orientation_e orientation = landscape_or_portrait >> 1;
 
-  if (back_or_front == 1) {
-    return ACC__ORRIENTATION_UNKNOWN;
+  if (z_tilt && !back_or_front) {
+    orientation = ACC__ORIENTATION_FRONT;
+  } else if (!z_tilt && back_or_front) {
+    orientation = ACC__ORIENTATION_BACK;
   }
 
   return orientation;

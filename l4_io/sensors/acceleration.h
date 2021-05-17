@@ -13,11 +13,13 @@ typedef enum {
 } acceleration__interrupt_source_e;
 
 typedef enum {
-  ACC__ORRIENTATION_UP = 0,
-  ACC__ORRIENTATION_DOWN,
-  ACC__ORRIENTATION_RIGHT,
-  ACC__ORRIENTATION_LEFT,
-  ACC__ORRIENTATION_UNKNOWN
+  ACC__ORIENTATION_UP = 0,
+  ACC__ORIENTATION_DOWN,
+  ACC__ORIENTATION_RIGHT,
+  ACC__ORIENTATION_LEFT,
+  ACC__ORIENTATION_FRONT,
+  ACC__ORIENTATION_BACK,
+  ACC__ORIENTATION_UNKNOWN
 } acceleration__orientation_e;
 
 bool acceleration__init(void);
@@ -29,6 +31,8 @@ float acceleration__get_acceleration_y(void);
 float acceleration__get_acceleration_z(void);
 
 void acceleration__enable_orientation_interrupts(void);
+
+void acceleration__set_orientation_debounce_counter(uint8_t count);
 
 acceleration__orientation_e acceleration__get_orientation(void);
 

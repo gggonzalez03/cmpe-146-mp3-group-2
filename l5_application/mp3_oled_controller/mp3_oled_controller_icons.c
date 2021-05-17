@@ -258,6 +258,24 @@ void mp3_oled_controller_icons__print_volume_bar_icon(uint8_t level) {
 
   static uint8_t volume_bar_line = 0x18;
   static uint8_t volume_circle[5] = {0x3C, 0x7E, 0x7E, 0x7E, 0x3C};
+  static uint8_t volume_plus_sign[6] = {0x18, 0x18, 0x7E, 0x7E, 0x18, 0x18};
+  static uint8_t volume_speaker_sign[6] = {0x3C, 0x3C, 0x3C, 0x7E, 0xFF, 0xFF};
+  static uint8_t volume_minus_sign[6] = {0x18, 0x18, 0x18, 0x18, 0x18, 0x18};
+
+  const uint8_t start_page_speaker_logo = 0x06;
+  const uint8_t end_column_speaker_logo_minus = 0x1B;
+  const uint8_t start_column_speaker_logo_plus = 0x62;
+
+  SSD1306__page_specify(start_page_speaker_logo, start_page_speaker_logo);
+  SSD1306__column_specify(start_column, end_column_speaker_logo_minus);
+  SSD1306__send_data(volume_speaker_sign, 6);
+  SSD1306_ascii_display_space(false);
+  SSD1306__send_data(volume_minus_sign, 5);
+
+  SSD1306__column_specify(start_column_speaker_logo_plus, end_column);
+  SSD1306__send_data(volume_speaker_sign, 6);
+  SSD1306_ascii_display_space(false);
+  SSD1306__send_data(volume_plus_sign, 6);
 
   uint8_t volume_circle_start_index = 0;
 
