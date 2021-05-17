@@ -107,6 +107,8 @@ static void mp3_oled_controller__player_show_prv(void) {
   }
   mp3_oled_controller_icons__print_next_song_icon();
   mp3_oled_controller_icons__print_volume_bar_icon(mp3_oled_screen.volume_percentage);
+  mp3_oled_controller_icons__print_treble_bar_icon(10);
+  mp3_oled_controller_icons__print_bass_bar_icon(10);
 }
 
 /************************************************************************************
