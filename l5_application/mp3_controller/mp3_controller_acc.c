@@ -93,6 +93,7 @@ void mp3_controller_acc__suspend_treble_task(void) {
 
   if (status.eCurrentState != eSuspended) {
     vTaskResume(treble_task_suspender);
+    vs1053b__set_treble_frequency(15); // back to normal treble
   }
 }
 
@@ -104,6 +105,7 @@ void mp3_controller_acc__suspend_bass_task(void) {
 
   if (status.eCurrentState != eSuspended) {
     vTaskResume(bass_task_suspender);
+    vs1053b__set_bass_frequency(2); // back to normal bass
   }
 }
 
