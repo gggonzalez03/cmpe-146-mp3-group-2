@@ -70,3 +70,27 @@ void vs1053b__sine_test(uint8_t n, uint32_t duration_in_ms);
  * @param right is the volume for the right output in percent
  **/
 void vs1053b__set_volume(uint8_t left, uint8_t right);
+
+/**
+ * Set treble amplitude
+ * @param treble_amp is to control amplitude of treble. ONLY first 0:3 bits valid
+ **/
+void vs1053b__set_treble_amplitude(uint8_t treble_amp);
+
+/**
+ * Set treble frequency
+ * @param treble_freq is to control frequency of treble. ONLY first 0:3 bits valid
+ **/
+void vs1053b__set_treble_frequency(uint8_t treble_freq);
+
+/**
+ * Set bass amplitude
+ * @param bass_amp is to control amplitude of bass. ONLY first 0:3 bits valid
+ **/
+void vs1053b__set_bass_amplitude(uint8_t bass_amp);
+
+/**
+ * Set treble frequency
+ * @param bass_freq is to control frequency of bass. ONLY first 0:3 bits valid
+ **/
+void vs1053b__set_bass_frequency(uint8_t bass_freq);

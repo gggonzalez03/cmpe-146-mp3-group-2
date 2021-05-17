@@ -1,5 +1,6 @@
 #include "vs1053b_mp3_decoder.h"
 #include "vs1053b_mp3_decoder_spi.h"
+#include <stdio.h>
 
 bool vs1053b__mp3_decoder_initialize(void) {
   vs1053b__configure_spi(1);
@@ -154,4 +155,40 @@ void vs1053b__set_volume(uint8_t left, uint8_t right) {
   vs1053b__dds();
   vs1053b__sci_write(volume_command, left_and_right);
   vs1053b__dcs(); // Reselect data chip select, continue playing song
+}
+
+void vs1053b__set_treble_amplitude(uint8_t treble_amp) {
+  uint8_t treble_bass_command = 0x02;
+  uint16_t current_bass_treble = vs1053b__sci_read(treble_bass_command) & ~(0xF000);
+  uint16_t treble_amplitude = ((uint16_t)treble_amp << 12) | current_bass_treble;
+  vs1053b__dds();
+  vs1053b__sci_write(treble_bass_command, treble_amplitude);
+  vs1053b__dcs();
+}
+
+void vs1053b__set_treble_frequency(uint8_t treble_freq) {
+  uint8_t treble_bass_command = 0x02;
+  uint16_t current_bass_treble = vs1053b__sci_read(treble_bass_command) & ~(0x0F00);
+  uint16_t treble_freqency = ((uint16_t)treble_freq << 8) | current_bass_treble;
+  vs1053b__dds();
+  vs1053b__sci_write(treble_bass_command, treble_freqency);
+  vs1053b__dcs();
+}
+
+void vs1053b__set_bass_amplitude(uint8_t bass_amp) {
+  uint8_t treble_bass_command = 0x02;
+  uint16_t current_bass_treble = vs1053b__sci_read(treble_bass_command) & ~(0x00F0);
+  uint16_t bass_amplitude = ((uint16_t)bass_amp << 4) | current_bass_treble;
+  vs1053b__dds();
+  vs1053b__sci_write(treble_bass_command, bass_amplitude);
+  vs1053b__dcs();
+}
+
+void vs1053b__set_bass_frequency(uint8_t bass_freq) {
+  uint8_t treble_bass_command = 0x02;
+  uint16_t current_bass_treble = vs1053b__sci_read(treble_bass_command) & ~(0x000F);
+  uint16_t bass_frequency = (uint16_t)bass_freq | current_bass_treble;
+  vs1053b__dds();
+  vs1053b__sci_write(treble_bass_command, bass_frequency);
+  vs1053b__dcs();
 }

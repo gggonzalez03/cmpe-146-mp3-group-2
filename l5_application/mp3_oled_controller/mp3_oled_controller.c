@@ -59,10 +59,11 @@ static void mp3_oled_controller__player_print_song_metadata(void) {
     SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->album,
                                                  &mp3_oled_controller__songname_max_length, false);
 
-    SSD1306__page_specify(++start_row, ++end_row);
-    SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin, mp3_oled_controller__oled_end_column_margin);
-    SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->year,
-                                                 &mp3_oled_controller__songname_max_length, false);
+    // SSD1306__page_specify(++start_row, ++end_row);
+    // SSD1306__column_specify(mp3_oled_controller__oled_start_column_margin,
+    // mp3_oled_controller__oled_end_column_margin);
+    // SSD1306_ascii_display_string_with_max_length(mp3_oled_screen.mp3_playing_song->year,
+    //                                             &mp3_oled_controller__songname_max_length, false);
   }
 }
 
