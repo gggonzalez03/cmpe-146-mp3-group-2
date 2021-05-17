@@ -25,7 +25,9 @@ static mp3_oled_controller_s mp3_oled_screen = {.current_top_song_index = 0,
                                                 .highlighted_song_index = 0,
                                                 .mp3_playing_song = NULL,
                                                 .is_song_paused = true,
-                                                .volume_percentage = 70};
+                                                .volume_percentage = 70,
+                                                .bass_level = 2,
+                                                .treble_level = 1};
 
 const uint32_t mp3_oled_controller__songname_max_length = 12;
 
@@ -107,8 +109,8 @@ static void mp3_oled_controller__player_show_prv(void) {
   }
   mp3_oled_controller_icons__print_next_song_icon();
   mp3_oled_controller_icons__print_volume_bar_icon(mp3_oled_screen.volume_percentage);
-  mp3_oled_controller_icons__print_treble_bar_icon(10);
-  mp3_oled_controller_icons__print_bass_bar_icon(10);
+  mp3_oled_controller_icons__print_treble_bar_icon(mp3_oled_screen.treble_level);
+  mp3_oled_controller_icons__print_bass_bar_icon(mp3_oled_screen.bass_level);
 }
 
 /************************************************************************************
@@ -208,6 +210,36 @@ void mp3_oled_controller__player_set_volume(uint8_t volume) { mp3_oled_screen.vo
  **/
 void mp3_oled_controller__player_show_volume(uint8_t volume) {
   mp3_oled_screen.volume_percentage = volume;
+  xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
+}
+
+/**
+ * Set bass
+ * @param bass is the new bass level from 0 to 10
+ **/
+void mp3_oled_controller__player_set_bass(uint8_t bass) { mp3_oled_screen.bass_level = bass; }
+
+/**
+ * Set treble
+ * @param treble is the new treble level from 0 to 10
+ **/
+void mp3_oled_controller__player_set_treble(uint8_t treble) { mp3_oled_screen.treble_level = treble; }
+
+/**
+ * Set and show bass
+ * @param bass is the new bass level from 0 to 10
+ **/
+void mp3_oled_controller__player_show_bass(uint8_t bass) {
+  mp3_oled_screen.bass_level = bass;
+  xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
+}
+
+/**
+ * Set and show treble
+ * @param treble is the new treble level from 0 to 10
+ **/
+void mp3_oled_controller__player_show_treble(uint8_t treble) {
+  mp3_oled_screen.treble_level = treble;
   xQueueSend(mp3_oled_controller__screen_update_queue, (void *)&player_screen, 0);
 }
 

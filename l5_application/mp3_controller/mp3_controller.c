@@ -50,6 +50,7 @@ static const gpio_s mp3_controller_accel_interrupt_2 = {GPIO__PORT_0, 25};
 
 static const mp3_controller_s show_songs = {MP3_CONTROLLER__SHOW_SONGS, 0};
 static const mp3_controller_s show_player = {MP3_CONTROLLER__SHOW_PLAYER, 0};
+static const mp3_controller_s do_nothing = {MP3_CONTROLLER__DO_NOTHING, 0};
 static const mp3_controller_s play_enqueued_song = {MP3_CONTROLLER__PLAY_ENQUEUED_SONG, 0};
 static const mp3_controller_s play_previous_song = {MP3_CONTROLLER__PLAY_PREVIOUS_SONG, 0};
 static const mp3_controller_s scroll_up = {MP3_CONTROLLER__SCROLL_UP, 0};
@@ -163,7 +164,7 @@ static void mp3_controller__initialize_accelerometer() {
 
 static mp3_controller_s mp3_controller__get_control_from_orientation() {
 
-  mp3_controller_s control;
+  mp3_controller_s control = do_nothing;
 
   songname_t songname;
 
@@ -340,6 +341,8 @@ void mp3_controller__play_previous_song(void) {
     }
     is_song_playing = true;
     mp3_controller__resume_song();
+
+    mp3_controller__go_to_player_screen();
   }
 }
 
@@ -374,7 +377,7 @@ bool mp3_controller__is_on_player_screen(void) { return is_on_player_screen; }
 mp3_controller_s mp3_controller__decode_control_from_input(mp3_controller__control_input_source_e control_input) {
 
   static char songname[32];
-  mp3_controller_s control = show_player; // default is to show the player screen
+  mp3_controller_s control = do_nothing;
 
   switch (control_input) {
   case MP3_CONTROLLER__ROTARY_ENCODER_SCROLL_CLOCKW:
@@ -459,6 +462,7 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__PLAY_ENQUEUED_SONG:
     mp3_controller__play_enqueued_song();
+    mp3_controller__go_to_player_screen();
     break;
   case MP3_CONTROLLER__ENQUEUE_SONG:
     mp3_controller__enqueue_song(control->argument);
@@ -477,9 +481,11 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
     break;
   case MP3_CONTROLLER__SET_TREBLE:
     mp3_controller_acc__resume_treble_task();
+    mp3_controller__go_to_player_screen();
     break;
   case MP3_CONTROLLER__SET_BASS:
     mp3_controller_acc__resume_bass_task();
+    mp3_controller__go_to_player_screen();
     break;
   case MP3_CONTROLLER__CLEAR_TREBLE_BASS:
     mp3_controller_acc__suspend_treble_task();

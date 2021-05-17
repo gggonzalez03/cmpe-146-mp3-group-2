@@ -30,6 +30,7 @@ typedef enum {
   MP3_CONTROLLER__PAUSE_SONG,
   MP3_CONTROLLER__RESUME_SONG,
   MP3_CONTROLLER__STOP_SONG,
+  MP3_CONTROLLER__DO_NOTHING
 } mp3_controller_controls_e;
 
 typedef struct {

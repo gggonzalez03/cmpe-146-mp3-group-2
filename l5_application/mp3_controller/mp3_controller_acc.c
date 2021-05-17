@@ -7,6 +7,7 @@
 #include "task.h"
 
 #include "acceleration.h"
+#include "mp3_oled_controller.h"
 #include "vs1053b_mp3_decoder.h"
 
 static volatile bool treble_task_suspend_allowed = false;
@@ -44,6 +45,7 @@ void mp3_controller_acc__treble_task(void *parameter) {
     frq = 10 - (uint8_t)abs(x);
 
     vs1053b__set_treble_frequency(frq);
+    mp3_oled_controller__player_show_treble((uint8_t)abs(x));
 
     treble_task_suspend_allowed = true;
     vTaskDelay(250);
@@ -61,6 +63,7 @@ void mp3_controller_acc__bass_task(void *parameter) {
     frq = (uint8_t)abs(x) * 2;
 
     vs1053b__set_bass_frequency(frq);
+    mp3_oled_controller__player_show_bass(x);
 
     bass_task_suspend_allowed = true;
     vTaskDelay(250);
@@ -94,6 +97,7 @@ void mp3_controller_acc__suspend_treble_task(void) {
   if (status.eCurrentState != eSuspended) {
     vTaskResume(treble_task_suspender);
     vs1053b__set_treble_frequency(15); // back to normal treble
+    mp3_oled_controller__player_show_treble(1);
   }
 }
 
@@ -106,6 +110,7 @@ void mp3_controller_acc__suspend_bass_task(void) {
   if (status.eCurrentState != eSuspended) {
     vTaskResume(bass_task_suspender);
     vs1053b__set_bass_frequency(2); // back to normal bass
+    mp3_oled_controller__player_show_bass(2);
   }
 }
 

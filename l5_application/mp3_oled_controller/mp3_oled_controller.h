@@ -21,6 +21,8 @@ typedef struct {
   const mp3_s *mp3_playing_song;
   bool is_song_paused;
   uint8_t volume_percentage;
+  uint8_t bass_level;
+  uint8_t treble_level;
 } mp3_oled_controller_s;
 
 /**
@@ -84,6 +86,30 @@ void mp3_oled_controller__player_set_volume(uint8_t volume);
  * @param volume is the new volume level from 0 to 100
  **/
 void mp3_oled_controller__player_show_volume(uint8_t volume);
+
+/**
+ * Set bass
+ * @param bass is the new bass level from 0 to 10
+ **/
+void mp3_oled_controller__player_set_bass(uint8_t bass);
+
+/**
+ * Set treble
+ * @param treble is the new treble level from 0 to 10
+ **/
+void mp3_oled_controller__player_set_treble(uint8_t treble);
+
+/**
+ * Set and show bass
+ * @param bass is the new bass level from 0 to 10
+ **/
+void mp3_oled_controller__player_show_bass(uint8_t bass);
+
+/**
+ * Set and show treble
+ * @param treble is the new treble level from 0 to 10
+ **/
+void mp3_oled_controller__player_show_treble(uint8_t treble);
 
 /**
  * Update the screen based on the current data values and flag statuses
