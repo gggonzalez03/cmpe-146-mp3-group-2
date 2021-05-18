@@ -1,3 +1,16 @@
+## Pictures
+#### MP3 Enclosure
+![MP3 Enclosure](./photos/mp3_enclosed.jpeg)
+#### MP3 Song List Screen
+![MP3 Song List Screen](./photos/mp3_song_list_screen.jpeg)
+#### MP3 Player Screen
+![MP3 Player Screen](./photos/mp3_player_screen.jpeg)
+#### MP3 Disassembly
+![MP3 Enclosure](./photos/mp3_disassembly.jpeg)
+#### MP3 CPU Utilizaation
+![MP3 Enclosure](./photos/mp3_cpu_utilization.png)
+
+
 ## Project Documentation
 
 This is the documentation of everything relevant to this folder, which does quite a few things:
