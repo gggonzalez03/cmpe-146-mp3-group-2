@@ -22,6 +22,8 @@
 typedef char songname_t[32];
 typedef char file_buffer_t[512];
 
+songname_t filename;
+
 QueueHandle_t q_songname;
 QueueHandle_t q_songname_previous;
 static QueueHandle_t q_songdata;
@@ -91,7 +93,6 @@ int main(void) {
  **********************************************************/
 static void mp3_reader_task(void *p) {
 
-  songname_t filename;
   file_buffer_t buffer;
   UINT bytes_read;
 

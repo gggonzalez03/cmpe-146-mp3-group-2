@@ -75,6 +75,8 @@ static bool is_break_required = false;
 
 static bool is_on_player_screen = false; // the user is either on the player screen or the song list screen
 
+extern songname_t filename;
+
 /************************************************************************************
  *
  *                                  PRIVATE FUNCTIONS
@@ -459,10 +461,12 @@ bool mp3_controller__execute_control(const mp3_controller_s *const control) {
   case MP3_CONTROLLER__PLAY_SONG:
     mp3_controller__play_song(control->argument);
     mp3_controller__go_to_player_screen();
+    xQueueSendToFront(q_songname_previous, (void *)filename, 0);
     break;
   case MP3_CONTROLLER__PLAY_ENQUEUED_SONG:
     mp3_controller__play_enqueued_song();
     mp3_controller__go_to_player_screen();
+    xQueueSendToFront(q_songname_previous, (void *)filename, 0);
     break;
   case MP3_CONTROLLER__ENQUEUE_SONG:
     mp3_controller__enqueue_song(control->argument);
